@@ -129,24 +129,87 @@ SHELL_CMD_REGISTER(demo, &sub_demo, "Demo commands", NULL);
 
 SHELL_CMD_ARG_REGISTER(version, NULL, "Show kernel version", cmd_version, 1, 0);
 
+// DOCS: http://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/reference/shell/index.html?highlight=shell_cmd_arg_register
 
-// http://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/reference/shell/index.html?highlight=shell_cmd_arg_register
+/* ------------------------------------ CUSTOM COMMANDS ------------------------------------ */
+#define MAX_CHANNEL_NUM 	7	// we have 8 channels (0-7)
+#define MAX_TARGET_NUM		3	// we have 4 targets (0-3)
+#define MAX_ADC_NUM			15	// we have 16 ADC channels (0-15)
 
 static int cmd_power(const struct shell *shell, size_t argc, char **argv)
 {
-	ARG_UNUSED(argc);
-	ARG_UNUSED(argv);
-
-	shell_print(shell, "POWEEER!");
-
+	char *after_num = NULL;
+	int channel = strtol(argv[1], &after_num, 10);
+	if (channel < 0 || channel > MAX_TARGET_NUM) {
+		shell_print(shell, "ERROR: wrong parameter <channel>");
+		return -1;
+	}
+	char *state = "";	// TODO
+	shell_print(shell, "Received command: power state: %s on target: %d", state, channel);
 	return 0;
 }
+//SHELL_SUBCMD_DICT_SET_CREATE(sub_state, cmd_power, (on, 1), (ppk, 2), (off, 3));		// TODO
+SHELL_CMD_ARG_REGISTER(power, NULL, "parameters: <target num (0-3)> <state (on, ppk or off)>", cmd_power, 3, 0);
 
-// TODO add test cmds to test TCA, MUX, etc.
-
-SHELL_CMD_REGISTER(power, NULL, "Power command.", cmd_power);
-
-void main(void)
+static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 {
-
+	if (strcmp("off", argv[1]) == 0) 
+	{
+		shell_print(shell, "Received command: jtag all lines off.");
+	}
+	else
+	{
+		char *after_num = NULL;
+		int channel = strtol(argv[1], &after_num, 10);
+		if (channel < 0 || channel > MAX_CHANNEL_NUM) {
+			shell_print(shell, "ERROR: wrong parameter <channel>");
+			return -1;
+		}
+		shell_print(shell, "Received command: jtag channel %d on.", channel);
+	}
+	return 0;
 }
+SHELL_CMD_ARG_REGISTER(jtag, NULL, "parameters: <channel num (0-7) or off>", cmd_jtag, 2, 0);
+
+static int cmd_reset(const struct shell *shell, size_t argc, char **argv)
+{
+	char *after_num = NULL;
+	int channel = strtol(argv[1], &after_num, 10);
+	if (channel < 0 || channel > MAX_CHANNEL_NUM) {
+		shell_print(shell, "ERROR: wrong parameter <channel>");
+		return -1;
+	}
+	shell_print(shell, "Received command: reset channel %d.", channel);
+	return 0;
+}
+SHELL_CMD_ARG_REGISTER(reset, NULL, "parameters: <channel num (0-7)>", cmd_reset, 2, 0);
+
+static int cmd_adc(const struct shell *shell, size_t argc, char **argv)
+{
+	char *after_num = NULL;
+	int channel = strtol(argv[1], &after_num, 10);
+	if (channel < 0 || channel > MAX_ADC_NUM) {
+		shell_print(shell, "ERROR: wrong parameter <channel>");
+		return -1;
+	}
+	shell_print(shell, "Received command: adc channel %d.", channel);
+	return 0;
+}
+SHELL_CMD_ARG_REGISTER(adc, NULL, "parameters: <adc channel num (0-15)>", cmd_adc, 2, 0);
+
+static int cmd_led(const struct shell *shell, size_t argc, char **argv)
+{
+	char *after_num = NULL;
+	int channel = strtol(argv[1], &after_num, 10);
+	if (channel < 0 || channel > MAX_CHANNEL_NUM) {
+		shell_print(shell, "ERROR: wrong parameter <channel>");
+		return -1;
+	}
+	char *state = "";	// TODO
+	shell_print(shell, "Received command: led state: %s on channel: %d", state, channel);
+	return 0;
+}
+SHELL_CMD_ARG_REGISTER(led, NULL, "parameters: <channel num (0-7)> <state (on or off)>", cmd_led, 3, 0);
+
+
+void main(void) { }
