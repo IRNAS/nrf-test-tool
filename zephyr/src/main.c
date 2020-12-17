@@ -233,13 +233,19 @@ static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 }
 SHELL_CMD_ARG_REGISTER(led, NULL, "parameters: <channel num (0-7)> <state (on or off)>", cmd_led, 3, 0);
 
-static int cmd_test(const struct shell *shell, size_t argc, char **argv)		// TEST
+static int i2c_test(const struct shell *shell, size_t argc, char **argv)		// TEST
 {
-	i2c_init();
-	i2c_scan();
+	i2c_testing();
 	shell_print(shell, "OK");
 	return 0;
 }
-SHELL_CMD_REGISTER(test, NULL, "testing i2c", cmd_test);
+SHELL_CMD_REGISTER(i2c_test, NULL, "testing i2c (init and scan)", i2c_test);
+
+static int tca_test(const struct shell *shell, size_t argc, char **argv)		// TEST
+{
+	tca_testing();
+	return 0;
+}
+SHELL_CMD_REGISTER(tca_test, NULL, "testing tca", tca_test);
 
 void main(void) { }

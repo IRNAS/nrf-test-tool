@@ -1,14 +1,13 @@
-#include "communication.h"
+#include "i2c_functions.h"
 
-#include <device.h>
 #include <drivers/i2c.h>
 #include <logging/log.h>
 
-LOG_MODULE_REGISTER(communication);
+LOG_MODULE_REGISTER(i2c_functions);
 
 #define I2C_DEV "I2C_2"
 
-struct device *i2c_dev;
+static struct device *i2c_dev;
 
 int i2c_init(void)
 {
@@ -30,12 +29,10 @@ void i2c_scan(void)
 {
     uint8_t error = 0u;
 
-    LOG_INF("Starting i2c scanner...");
-
     /*start and configure i2c*/
-    LOG_INF("Value of NRF_TWIM3_NS->PSEL.SCL: %ld ", NRF_TWIM2_NS->PSEL.SCL);
-    LOG_INF("Value of NRF_TWIM3_NS->PSEL.SDA: %ld ", NRF_TWIM2_NS->PSEL.SDA);
-    LOG_INF("Value of NRF_TWIM3_NS->FREQUENCY: %ld ", NRF_TWIM2_NS->FREQUENCY);
+    LOG_INF("Value of NRF_TWIM3_NS->PSEL.SCL: %d ", NRF_TWIM2_NS->PSEL.SCL);
+    LOG_INF("Value of NRF_TWIM3_NS->PSEL.SDA: %d ", NRF_TWIM2_NS->PSEL.SDA);
+    LOG_INF("Value of NRF_TWIM3_NS->FREQUENCY: %d ", NRF_TWIM2_NS->FREQUENCY);
 
     int found[0x77 - 4];
     int found_i = 0;
@@ -49,7 +46,6 @@ void i2c_scan(void)
         /* Send the address to read from */
         msgs[0].buf = &dst;
         msgs[0].len = 1U;
-        msgs[0].flags = I2C_MSG_WRITE | I2C_MSG_STOP;
 
         error = i2c_transfer(i2c_dev, &msgs[0], 1, i);
         if (error == 0)
@@ -107,5 +103,6 @@ uint8_t read_reg(uint8_t address, uint8_t reg)
     {
         //LOG_DBG("i2c_read: no error\r");
     }
+    printk("test connection read result: %d\n", read_data);
     return read_data;
 }
