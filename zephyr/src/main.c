@@ -144,7 +144,7 @@ static int cmd_power(const struct shell *shell, size_t argc, char **argv)
 		shell_print(shell, "wrong parameter <target> \nERROR");
 		return -1;
 	}
-	if (strcmp("off", argv[2]) != 0 && strcmp("ppk", argv[2]) != 0 && strcmp("on", argv[1]) != 0) 
+	if (strcmp("off", argv[2]) != 0 && strcmp("ppk", argv[2]) != 0 && strcmp("on", argv[2]) != 0) 
 	{
 		shell_print(shell, "wrong parameter <state> \nERROR");
 		return -1;
@@ -210,7 +210,7 @@ static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 		shell_print(shell, "ERROR: wrong parameter <channel>");
 		return -1;
 	}
-	if (strcmp("off", argv[2]) != 0 && strcmp("on", argv[1]) != 0) 
+	if (strcmp("off", argv[2]) != 0 && strcmp("on", argv[2]) != 0) 
 	{
 		shell_print(shell, "wrong parameter <state> \nERROR");
 		return -1;
