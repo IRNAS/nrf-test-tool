@@ -241,11 +241,11 @@ static int i2c_test(const struct shell *shell, size_t argc, char **argv)		// TES
 }
 SHELL_CMD_REGISTER(i2c_test, NULL, "testing i2c (init and scan)", i2c_test);
 
-static int tca_test(const struct shell *shell, size_t argc, char **argv)		// TEST
+static int tca(const struct shell *shell, size_t argc, char **argv)		// TEST
 {
 	tca_testing();
 	return 0;
 }
-SHELL_CMD_REGISTER(tca_test, NULL, "testing tca", tca_test);
+SHELL_CMD_REGISTER(tca, NULL, "testing tca", tca);
 
 void main(void) { }

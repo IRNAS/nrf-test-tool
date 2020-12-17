@@ -103,6 +103,6 @@ uint8_t read_reg(uint8_t address, uint8_t reg)
     {
         //LOG_DBG("i2c_read: no error\r");
     }
-    printk("test connection read result: %d\n", read_data);
+    LOG_INF("test connection read result: %d", read_data);
     return read_data;
 }

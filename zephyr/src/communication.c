@@ -17,11 +17,12 @@ void i2c_testing(void)
 
 void tca_testing(void) 
 {
-    int res = read_reg(0x49, 0x00);
+    i2c_init();
+    int res = read_reg(73, 0);
     /*
     int err = test_connection();
     if (err) 
-    {
+    {   
         LOG_ERR("TCA connection test failed!");
     }
     */
