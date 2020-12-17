@@ -12,6 +12,8 @@
 #include <logging/log.h>
 #include <stdlib.h>
 
+#include "communication.h"
+
 LOG_MODULE_REGISTER(app);
 
 extern void foo(void);
@@ -221,5 +223,13 @@ static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 }
 SHELL_CMD_ARG_REGISTER(led, NULL, "parameters: <channel num (0-7)> <state (on or off)>", cmd_led, 3, 0);
 
+static int cmd_test(const struct shell *shell, size_t argc, char **argv)		// TEST
+{
+	i2c_init();
+	i2c_scan();
+	shell_print(shell, "OK");
+	return 0;
+}
+SHELL_CMD_REGISTER(test, NULL, "testing i2c", cmd_test);
 
 void main(void) { }
