@@ -1,6 +1,0 @@
-osource "/home/nejc/ncs/nrf/Kconfig.nrf"
-
-osource "/home/nejc/ncs/bootloader/mcuboot/zephyr/Kconfig"
-
-osource "/home/nejc/ncs/nrfxlib/Kconfig.nrfxlib"
-
