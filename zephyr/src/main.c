@@ -141,15 +141,20 @@ static int cmd_power(const struct shell *shell, size_t argc, char **argv)
 	char *after_num = NULL;
 	int channel = strtol(argv[1], &after_num, 10);
 	if (channel < 0 || channel > MAX_TARGET_NUM) {
-		shell_print(shell, "ERROR: wrong parameter <channel>");
+		shell_print(shell, "wrong parameter <target> \nERROR");
 		return -1;
 	}
-	char *state = "";	// TODO
+	if (strcmp("off", argv[2]) != 0 && strcmp("ppk", argv[2]) != 0 && strcmp("on", argv[1]) != 0) 
+	{
+		shell_print(shell, "wrong parameter <state> \nERROR");
+		return -1;
+	}
+	char *state = argv[2];
 	shell_print(shell, "Received command: power state: %s on target: %d", state, channel);
+	shell_print(shell, "OK");
 	return 0;
 }
-//SHELL_SUBCMD_DICT_SET_CREATE(sub_state, cmd_power, (on, 1), (ppk, 2), (off, 3));		// TODO
-SHELL_CMD_ARG_REGISTER(power, NULL, "parameters: <target num (0-3)> <state (on, ppk or off)>", cmd_power, 3, 0);
+SHELL_CMD_ARG_REGISTER(power, NULL, "parameters: <target num (0-3)> <state (on, ppk or off)> \nERROR", cmd_power, 3, 0);
 
 static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 {
@@ -205,7 +210,12 @@ static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 		shell_print(shell, "ERROR: wrong parameter <channel>");
 		return -1;
 	}
-	char *state = "";	// TODO
+	if (strcmp("off", argv[2]) != 0 && strcmp("on", argv[1]) != 0) 
+	{
+		shell_print(shell, "wrong parameter <state> \nERROR");
+		return -1;
+	}
+	char *state = argv[2];
 	shell_print(shell, "Received command: led state: %s on channel: %d", state, channel);
 	return 0;
 }
