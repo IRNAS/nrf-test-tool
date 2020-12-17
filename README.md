@@ -21,3 +21,13 @@ IRNAS nRF test tool for programming, testing and power measurement
 * Trigger actions via push buttons
 * See device status with LED
 * Reset each device
+
+
+## Requirements
+* nrf9160dk board
+* NCS v1.3.0
+
+## Commands to build and run Zephyr code
+1. `cd zephyr`
+1. `west build -p auto -b nrf9160dk_nrf9160`
+2. `west flash`
