@@ -6,7 +6,7 @@
 
 LOG_MODULE_REGISTER(communication);
 
-#define I2C_DEV "I2C_0"
+#define I2C_DEV "I2C_2"
 
 struct device *i2c_dev;
 
@@ -68,4 +68,44 @@ void i2c_scan(void)
     {
         LOG_INF("0x%2x", found[i]);
     }
+}
+
+/*
+ * @brief Writes value to register over I2C
+ *
+ * @param reg
+ * @param val
+ *
+ */
+void write_reg(uint8_t address, uint8_t reg, uint8_t val)
+{
+    if (i2c_reg_write_byte(i2c_dev, address, reg, val) != 0)
+    {
+        LOG_DBG("Error on i2c_write()");
+    }
+    else
+    {
+        //LOG_DBG("i2c_write: no error");
+    }
+}
+
+/*
+ * @brief Reads value from register over I2C
+ *
+ * @param reg
+ *
+ * @return content of reg
+ */
+uint8_t read_reg(uint8_t address, uint8_t reg)
+{
+    uint8_t read_data;
+    if (i2c_reg_read_byte(i2c_dev, address, reg, &read_data) != 0)
+    {
+        LOG_DBG("Error on i2c_read()");
+    }
+    else
+    {
+        //LOG_DBG("i2c_read: no error\r");
+    }
+    return read_data;
 }
