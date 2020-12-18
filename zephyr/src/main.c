@@ -140,11 +140,12 @@ static int cmd_power(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;
 	int channel = strtol(argv[1], &after_num, 10);
-	if (channel < 0 || channel > MAX_TARGET_NUM) {
+	if (channel < 0 || channel > MAX_TARGET_NUM) 
+	{
 		shell_print(shell, "wrong parameter <target> \nERROR");
 		return -1;
 	}
-	if (strcmp("off", argv[2]) != 0 && strcmp("ppk", argv[2]) != 0 && strcmp("on", argv[1]) != 0) 
+	if (strcmp("off", argv[2]) != 0 && strcmp("ppk", argv[2]) != 0 && strcmp("on", argv[2]) != 0) 
 	{
 		shell_print(shell, "wrong parameter <state> \nERROR");
 		return -1;
@@ -158,20 +159,23 @@ SHELL_CMD_ARG_REGISTER(power, NULL, "parameters: <target num (0-3)> <state (on, 
 
 static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 {
-	if (strcmp("off", argv[1]) == 0) 
+
+	char *after_num = NULL;
+	int channel = strtol(argv[1], &after_num, 10);
+	if (channel < -1 || channel > MAX_CHANNEL_NUM) 
 	{
-		shell_print(shell, "Received command: jtag all lines off.");
+		shell_print(shell, "ERROR: wrong parameter <channel>");
+		return -1;
 	}
-	else
+	if (channel == -1) 
 	{
-		char *after_num = NULL;
-		int channel = strtol(argv[1], &after_num, 10);
-		if (channel < 0 || channel > MAX_CHANNEL_NUM) {
-			shell_print(shell, "ERROR: wrong parameter <channel>");
-			return -1;
-		}
+		shell_print(shell, "Received command: jtag all channels off.", channel);
+	}
+	else 
+	{
 		shell_print(shell, "Received command: jtag channel %d on.", channel);
 	}
+	shell_print(shell, "OK");
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(jtag, NULL, "parameters: <channel num (0-7) or off>", cmd_jtag, 2, 0);
@@ -180,11 +184,13 @@ static int cmd_reset(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;
 	int channel = strtol(argv[1], &after_num, 10);
-	if (channel < 0 || channel > MAX_CHANNEL_NUM) {
+	if (channel < 0 || channel > MAX_CHANNEL_NUM) 
+	{
 		shell_print(shell, "ERROR: wrong parameter <channel>");
 		return -1;
 	}
 	shell_print(shell, "Received command: reset channel %d.", channel);
+	shell_print(shell, "OK");
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(reset, NULL, "parameters: <channel num (0-7)>", cmd_reset, 2, 0);
@@ -193,11 +199,13 @@ static int cmd_adc(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;
 	int channel = strtol(argv[1], &after_num, 10);
-	if (channel < 0 || channel > MAX_ADC_NUM) {
+	if (channel < 0 || channel > MAX_ADC_NUM) 
+	{
 		shell_print(shell, "ERROR: wrong parameter <channel>");
 		return -1;
 	}
 	shell_print(shell, "Received command: adc channel %d.", channel);
+	shell_print(shell, "OK");
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(adc, NULL, "parameters: <adc channel num (0-15)>", cmd_adc, 2, 0);
@@ -206,20 +214,30 @@ static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;
 	int channel = strtol(argv[1], &after_num, 10);
-	if (channel < 0 || channel > MAX_CHANNEL_NUM) {
+	if (channel < 0 || channel > MAX_CHANNEL_NUM) 
+	{
 		shell_print(shell, "ERROR: wrong parameter <channel>");
 		return -1;
 	}
-	if (strcmp("off", argv[2]) != 0 && strcmp("on", argv[1]) != 0) 
+	if (strcmp("off", argv[2]) != 0 && strcmp("on", argv[2]) != 0) 
 	{
 		shell_print(shell, "wrong parameter <state> \nERROR");
 		return -1;
 	}
 	char *state = argv[2];
 	shell_print(shell, "Received command: led state: %s on channel: %d", state, channel);
+	shell_print(shell, "OK");
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(led, NULL, "parameters: <channel num (0-7)> <state (on or off)>", cmd_led, 3, 0);
 
+// static int cmd_test(const struct shell *shell, size_t argc, char **argv)		// TEST
+// {
+// 	i2c_init();
+// 	i2c_scan();
+// 	shell_print(shell, "OK");
+// 	return 0;
+// }
+// SHELL_CMD_REGISTER(test, NULL, "testing i2c", cmd_test);
 
 void main(void) { }
