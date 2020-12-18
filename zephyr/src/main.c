@@ -170,6 +170,7 @@ static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 		shell_print(shell, "ERROR: wrong parameter <channel>");
 		return -1;
 	}
+  
 	if (channel == -1) 
 	{
 		shell_print(shell, "Received command: jtag all channels off.", channel);

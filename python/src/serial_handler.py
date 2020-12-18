@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import serial
-
+import logging
 
 class SerialHandler:
 
@@ -12,6 +12,7 @@ class SerialHandler:
         return received.decode("utf-8").rstrip()
 
     def write(self, data):
+        logging.info(f"Writing: {data}")
         data += "\n"
         self.ser.write(data.encode())
 
