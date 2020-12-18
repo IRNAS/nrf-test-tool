@@ -29,5 +29,5 @@ IRNAS nRF test tool for programming, testing and power measurement
 
 ## Commands to build and run Zephyr code
 1. `cd zephyr`
-1. `west build -p auto -b nrf9160dk_nrf9160`
+1. `west build -p auto -b nrf9160dk_nrf9160ns`
 2. `west flash`
