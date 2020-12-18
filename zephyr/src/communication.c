@@ -6,7 +6,7 @@
 
 #include <tca_interface.hpp>
 #include <max_interface.hpp>
-#include <i2c_functions.h>
+#include <peripherals.h>
 
 LOG_MODULE_REGISTER(communication);
 
@@ -61,7 +61,7 @@ int max_set_A_switches(uint16_t switch_config)
     }
 }
 
-void max_set_B_switches(uint16_t switch_config)
+int max_set_B_switches(uint16_t switch_config)
 {
     uint8_t swB0 = switch_config & 0xFF;  //lower byte configures B08-B01
     uint8_t swB1 = (switch_config & 0xFF00) >> 8;  //upper byte configures B16-B09
@@ -78,7 +78,7 @@ void max_set_B_switches(uint16_t switch_config)
     }
 }
 
-void max_clear_all_switches() 
+int max_clear_all_switches() 
 {
     clear_all();
 

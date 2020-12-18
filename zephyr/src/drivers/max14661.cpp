@@ -8,7 +8,7 @@
 #include <zephyr.h>
 #include <logging/log.h>
 
-#include "i2c_functions.h"
+#include "peripherals.h"
 
 LOG_MODULE_REGISTER(MAX14661);
 
