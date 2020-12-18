@@ -1,0 +1,8 @@
+zephyr_include_directories(.)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/i2c_functions.c)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tca_interface.cpp)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tca_interface.hpp)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tca6424.cpp)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tca6424.hpp)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/max14661.cpp)
+target_sources(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/max14661.hpp)
