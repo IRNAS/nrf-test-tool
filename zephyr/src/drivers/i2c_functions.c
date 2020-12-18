@@ -46,6 +46,7 @@ void i2c_scan(void)
         /* Send the address to read from */
         msgs[0].buf = &dst;
         msgs[0].len = 1U;
+        msgs[0].flags = I2C_MSG_WRITE | I2C_MSG_STOP;
 
         error = i2c_transfer(i2c_dev, &msgs[0], 1, i);
         if (error == 0)
