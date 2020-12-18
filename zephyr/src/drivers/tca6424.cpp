@@ -33,8 +33,11 @@ THE SOFTWARE.
 #include "tca6424.hpp"
 
 #include <zephyr.h>
+#include <logging/log.h>
 
 #include "i2c_functions.h"
+
+LOG_MODULE_REGISTER(tca6424);
 
 /** Default constructor, uses default I2C address.
  * @see TCA6424A_DEFAULT_ADDRESS
@@ -68,6 +71,7 @@ void TCA6424A::initialize() {
 bool TCA6424A::testConnection() {
     //return I2Cdev::readBytes(devAddr, TCA6424A_RA_INPUT0, 3, buffer) == 3;
     uint8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0);
+    LOG_INF("Connection test result: %d", result);
     return true;
 }
 

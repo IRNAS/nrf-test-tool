@@ -153,7 +153,8 @@ static int cmd_power(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	char *state = argv[2];
-	shell_print(shell, "Received command: power state: %s on target: %d", state, channel);
+	shell_print(shell, "Received command: power state: %s for target: %d", state, channel);
+	// TODO call actual function and return OK or ERR
 	shell_print(shell, "OK");
 	return 0;
 }
@@ -207,6 +208,7 @@ static int cmd_adc(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	shell_print(shell, "Received command: adc channel %d.", channel);
+	// TODO return adc value from desired channel or ERR
 	shell_print(shell, "OK");
 	return 0;
 }
@@ -227,25 +229,29 @@ static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	char *state = argv[2];
-	shell_print(shell, "Received command: led state: %s on channel: %d", state, channel);
+	shell_print(shell, "Received command: led state: %s for channel: %d", state, channel);
 	shell_print(shell, "OK");
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(led, NULL, "parameters: <channel num (0-7)> <state (on or off)>", cmd_led, 3, 0);
 
-static int i2c_test(const struct shell *shell, size_t argc, char **argv)		// TEST
+static int i2c_scan(const struct shell *shell, size_t argc, char **argv)
 {
-	i2c_testing();
+	perform_i2c_scan();
 	shell_print(shell, "OK");
 	return 0;
 }
-SHELL_CMD_REGISTER(i2c_test, NULL, "testing i2c (init and scan)", i2c_test);
+SHELL_CMD_REGISTER(scan, NULL, "testing i2c (init and scan)", i2c_scan);
 
-static int tca(const struct shell *shell, size_t argc, char **argv)		// TEST
+static int test_tca(const struct shell *shell, size_t argc, char **argv)
 {
-	tca_testing();
+	test_tca_chip();
 	return 0;
 }
-SHELL_CMD_REGISTER(tca, NULL, "testing tca", tca);
+SHELL_CMD_REGISTER(tca, NULL, "testing tca", test_tca);
 
-void main(void) { }
+void main(void) 
+{ 
+	LOG_INF("Nrf test tool: Hello");
+	initialize_peripherals();
+}

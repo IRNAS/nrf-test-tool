@@ -9,21 +9,34 @@
 
 LOG_MODULE_REGISTER(communication);
 
-void i2c_testing(void) 
+void initialize_peripherals(void) 
 {
     i2c_init();
+}
+
+void perform_i2c_scan(void) 
+{
     i2c_scan();
 }
 
-void tca_testing(void) 
+void test_tca_chip(void) 
 {
     i2c_init();
-    int res = read_reg(73, 0);
-    /*
     int err = test_connection();
     if (err) 
     {   
         LOG_ERR("TCA connection test failed!");
     }
-    */
+}
+
+/*
+int res = read_reg(0x22, 0x04);
+write_reg(0x22, 0x04, 0x01);
+res = read_reg(0x22, 0x04);
+*/
+
+int tca_set_power(int channel, char *state)
+{
+    // TODO
+    return 0;
 }
