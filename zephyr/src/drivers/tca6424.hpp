@@ -94,10 +94,10 @@ class TCA6424A {
         TCA6424A(uint8_t address);
         
         void initialize();
-        bool testConnection();
+        uint8_t testConnection();
         
         // INPUT* registers (x0h - x2h)
-        bool readPin(uint16_t pin);
+        uint8_t readPin(uint8_t pin);
         uint8_t readBank(uint8_t bank);
         void readAll(uint8_t *banks);
         void readAll(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2);
@@ -107,7 +107,7 @@ class TCA6424A {
         uint8_t getBankOutputLevel(uint8_t bank);
         void getAllOutputLevel(uint8_t *banks);
         void getAllOutputLevel(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2);
-        void writePin(uint16_t pin, bool polarity);
+        void writePin(uint16_t pin, uint8_t value);
         void writeBank(uint8_t bank, uint8_t value);
         void writeAll(uint8_t *banks);
         void writeAll(uint8_t bank0, uint8_t bank1, uint8_t bank2);

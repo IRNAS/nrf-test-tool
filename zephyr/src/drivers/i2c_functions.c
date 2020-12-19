@@ -78,7 +78,7 @@ void write_reg(uint8_t address, uint8_t reg, uint8_t val)
 {
     if (i2c_reg_write_byte(i2c_dev, address, reg, val) != 0)
     {
-        LOG_DBG("Error on i2c_write()");
+        LOG_ERR("Error on i2c_write()");
     }
     else
     {
@@ -98,12 +98,11 @@ uint8_t read_reg(uint8_t address, uint8_t reg)
     uint8_t read_data;
     if (i2c_reg_read_byte(i2c_dev, address, reg, &read_data) != 0)
     {
-        LOG_DBG("Error on i2c_read()");
+        LOG_ERR("Error on i2c_read()");
     }
     else
     {
         //LOG_DBG("i2c_read: no error\r");
     }
-    LOG_INF("test connection read result: %d", read_data);
     return read_data;
 }
