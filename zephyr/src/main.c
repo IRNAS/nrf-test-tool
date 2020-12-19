@@ -142,8 +142,8 @@ SHELL_CMD_ARG_REGISTER(version, NULL, "Show kernel version", cmd_version, 1, 0);
 static int cmd_power(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;
-	int channel = strtol(argv[1], &after_num, 10);
-	if (channel < 0 || channel > MAX_TARGET_NUM) 
+	int target = strtol(argv[1], &after_num, 10);
+	if (target < 0 || target > MAX_TARGET_NUM) 
 	{
 		shell_print(shell, "wrong parameter <target> \nERROR");
 		return -1;
@@ -154,8 +154,8 @@ static int cmd_power(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	char *state = argv[2];
-	shell_print(shell, "Received command: power state: %s for target: %d", state, channel);
-	// TODO call actual function and return OK or ERR
+	shell_print(shell, "Received command: power state: %s for target: %d", state, target);
+	int err = tca_set_power(target, state);		// TODO return OK or ERR
 	shell_print(shell, "OK");
 	return 0;
 }
