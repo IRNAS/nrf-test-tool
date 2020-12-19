@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 #include "communication.h"
-#include "gpio.h"
+#include <gpio.h>
 
 LOG_MODULE_REGISTER(app);
 
@@ -195,6 +195,7 @@ static int cmd_reset(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	shell_print(shell, "Received command: reset channel %d.", channel);
+	int err = gpio_reset(channel);		// TODO return OK or ERR
 	shell_print(shell, "OK");
 	return 0;
 }
@@ -280,8 +281,6 @@ void main(void)
 { 
 	LOG_INF("Nrf test tool: Hello");
 	initialize_peripherals();
-	dk_gpio_init();
-	configure_all_reset_pins();
 
 	// enable_pin(PIN_NRF52_RESET_T0);
 	// k_sleep(K_SECONDS(5));

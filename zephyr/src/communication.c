@@ -4,15 +4,19 @@
 #include <stdlib.h>
 #include <logging/log.h>
 
+#include <peripherals.h>
 #include <tca_interface.hpp>
 #include <max_interface.hpp>
-#include <peripherals.h>
+#include <gpio.h>
 
 LOG_MODULE_REGISTER(communication);
 
 void initialize_peripherals(void) 
 {
+    dk_gpio_init();
+	configure_all_reset_pins();
     i2c_init();
+
     tca_init();
 }
 
@@ -77,6 +81,16 @@ uint8_t tca_set_power(uint8_t target, char *state)
     return 0;
 }
 
+uint8_t gpio_reset(uint8_t channel)  
+{
+    uint8_t pin = channel + 3;  // gpio pins start with number 3 and end with 10
+    enable_pin(pin);
+    k_msleep(100);
+    disable_pin(pin);
+    return 0;
+}
+
+// TODO check this
 /* MAX14661 functions */
 
 int max_set_A_switches(uint16_t switch_config)
