@@ -261,7 +261,7 @@ void button_1_interrupt_handler(struct device *dev, struct gpio_callback *cb, u3
 	enable_pin(PIN_NRF52_RESET_T0);  // enable LED 2
 	//printk("A");
 
-	enable_button_1_delayed_interrupt(5);
+	enable_button_1_delayed_interrupt(K_SECONDS(5));
 }
 
 void button_2_interrupt_handler(struct device *dev, struct gpio_callback *cb, u32_t pin)
@@ -273,7 +273,7 @@ void button_2_interrupt_handler(struct device *dev, struct gpio_callback *cb, u3
 	//printk("A");
 
 	//enable_button_interrupt(PIN_BUTTON_2);
-	enable_button_2_delayed_interrupt(5);
+	enable_button_2_delayed_interrupt(K_SECONDS(5));
 }
 
 void main(void) 

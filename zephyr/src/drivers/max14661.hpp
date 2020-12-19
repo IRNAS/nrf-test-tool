@@ -102,8 +102,7 @@ class MAX14661
         };
         /** Name the switch bits
 
-        /** Clears all bits to opens all 32 switches
-         */
+        /* Clears all bits to opens all 32 switches */
         void clearAll();
         /** Set A switches simultaneously
          *

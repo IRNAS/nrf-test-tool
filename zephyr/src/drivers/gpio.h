@@ -24,7 +24,7 @@
 #endif
 
 int dk_gpio_init(void);
-void configure_all_pins(void);
+void configure_all_reset_pins(void);
 
 void button_1_pressed(void (*cb_func)(struct device *dev, struct gpio_callback *cb, u32_t pin));
 void button_2_pressed(void (*cb_func)(struct device *dev, struct gpio_callback *cb, u32_t pin));
@@ -33,6 +33,9 @@ void button_4_pressed(void (*cb_func)(struct device *dev, struct gpio_callback *
 
 void enable_button_interrupt(uint8_t button);
 void disable_button_interrupt(uint8_t button);
+
+void enable_button_1_delayed_interrupt(k_timeout_t delay);
+void enable_button_2_delayed_interrupt(k_timeout_t delay);
 
 void reset_pin(uint8_t pin);
 void enable_pin(uint8_t pin);
