@@ -13,6 +13,7 @@
 #include <stdlib.h>
 
 #include "communication.h"
+#include "gpio.h"
 
 LOG_MODULE_REGISTER(app);
 
@@ -251,8 +252,41 @@ static int test_tca(const struct shell *shell, size_t argc, char **argv)
 }
 SHELL_CMD_REGISTER(tca, NULL, "testing tca", test_tca);
 
+/* INTERRUPTS */
+void button_1_interrupt_handler(struct device *dev, struct gpio_callback *cb, u32_t pin)
+{
+	disable_button_interrupt(PIN_BUTTON_1);
+
+	//LOG_INF("BUTTON 1 PRESSED");
+	enable_pin(PIN_NRF52_RESET_T0);  // enable LED 2
+	//printk("A");
+
+	enable_button_1_delayed_interrupt(K_SECONDS(5));
+}
+
+void button_2_interrupt_handler(struct device *dev, struct gpio_callback *cb, u32_t pin)
+{
+	disable_button_interrupt(PIN_BUTTON_2);
+
+	//LOG_INF("BUTTON 1 PRESSED");
+	disable_pin(PIN_NRF52_RESET_T0);  // disable LED 2
+	//printk("A");
+
+	//enable_button_interrupt(PIN_BUTTON_2);
+	enable_button_2_delayed_interrupt(K_SECONDS(5));
+}
+
 void main(void) 
 { 
 	LOG_INF("Nrf test tool: Hello");
 	initialize_peripherals();
+	dk_gpio_init();
+	configure_all_reset_pins();
+
+	// enable_pin(PIN_NRF52_RESET_T0);
+	// k_sleep(K_SECONDS(5));
+	// disable_pin(PIN_NRF52_RESET_T0);
+
+	// button_1_pressed(button_1_interrupt_handler);
+	// button_2_pressed(button_2_interrupt_handler);
 }
