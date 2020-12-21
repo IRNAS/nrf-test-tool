@@ -180,6 +180,7 @@ static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 	{
 		shell_print(shell, "Received command: jtag channel %d on.", channel);
 	}
+	max_set_jtag(channel);
 	shell_print(shell, "OK");
 	return 0;
 }
@@ -252,6 +253,13 @@ static int test_tca(const struct shell *shell, size_t argc, char **argv)
 	return 0;
 }
 SHELL_CMD_REGISTER(tca, NULL, "testing tca", test_tca);
+
+static int test_max(const struct shell *shell, size_t argc, char **argv)
+{
+	test_max_chip();
+	return 0;
+}
+SHELL_CMD_REGISTER(max, NULL, "testing max", test_max);
 
 /* INTERRUPTS */
 void button_1_interrupt_handler(struct device *dev, struct gpio_callback *cb, u32_t pin)

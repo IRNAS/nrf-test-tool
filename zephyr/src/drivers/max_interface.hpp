@@ -8,13 +8,13 @@ extern "C"
 {
 #endif
 
-    void clear_all(void);
-    void set_A(uint8_t swA0, uint8_t swA1);
-    void set_B(uint8_t swB0, uint8_t swB1);
-    uint8_t read_dir0();
-    uint8_t read_dir1();
-    uint8_t read_dir2();
-    uint8_t read_dir3();
+    void max_clear_all(void);
+    void max_set_A(uint8_t swA0, uint8_t swA1);
+    void max_set_B(uint8_t swB0, uint8_t swB1);
+    uint8_t max_read_dir0();
+    uint8_t max_read_dir1();
+    uint8_t max_read_dir2();
+    uint8_t max_read_dir3();
 
 #ifdef __cplusplus
 } // extern C
