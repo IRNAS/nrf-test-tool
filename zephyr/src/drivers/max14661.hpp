@@ -77,7 +77,7 @@ class MAX14661
          *
          * @param addr MAX14661 I2C address
          */
-        MAX14661(int addr = 0x98);
+        MAX14661(int addr = MAX14661_DEFAULT_ADDRESS);
         ~MAX14661();
         /** Name the register addresses
          */
@@ -104,6 +104,7 @@ class MAX14661
 
         /* Clears all bits to opens all 32 switches */
         void clearAll();
+
         /** Set A switches simultaneously
          *
          * @param swA0 the desired state of switches [A09 - A01]
@@ -111,7 +112,7 @@ class MAX14661
          */
         void setA(uint8_t swA0, uint8_t swA1);
 
-        /** Set A switches simultaneously
+        /** Set B switches simultaneously
          *
          * @param swB0 the desired state of switches [B09 - B01]
          * @param swB1 the desired state of switches [B16 - B10]

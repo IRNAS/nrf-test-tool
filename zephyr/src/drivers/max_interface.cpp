@@ -7,7 +7,7 @@
 #include "max14661.hpp"
 
 // tca driver class instance
-MAX14661 m_max14661; //= MAX14661(0x77);
+MAX14661 m_max14661;
 
 void max_clear_all() 
 {

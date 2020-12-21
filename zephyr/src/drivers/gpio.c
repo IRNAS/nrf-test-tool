@@ -47,6 +47,7 @@ void configure_all_reset_pins(void)
 
 void enable_pin(uint8_t pin)
 {
+    gpio_pin_configure(gpio_dev, pin, GPIO_OUTPUT); // TODO move to init
     gpio_pin_set(gpio_dev, pin, 1);
 }
 

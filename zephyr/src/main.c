@@ -234,6 +234,7 @@ static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 	}
 	char *state = argv[2];
 	shell_print(shell, "Received command: led state: %s for channel: %d", state, channel);
+	int err = tca_set_led(channel, state);		// TODO return OK or ERR
 	shell_print(shell, "OK");
 	return 0;
 }
