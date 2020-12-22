@@ -45,7 +45,7 @@ If above .hex file doesn't work, the following steps need to be done:
 * Press Q and confirm save
 * Execute `west build -b nrf9160dk_nrf52840 && west flash`
 
-NRF52 chip is now correctly configured for communication with LR1110 EVK shield.
+NRF52 chip is now correctly configured and switch PROG/DEBUG can be flippend back to nrf91.
 
 ## Commands to build and run Zephyr code
 1. `cd zephyr`
