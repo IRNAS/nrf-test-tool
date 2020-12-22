@@ -31,3 +31,8 @@ if not ret:
 ret = board_controller.reset(0)
 if not ret:
     logging.error("Unable to reset target 0")
+
+# power off target 0
+ret = board_controller.set_power(0, "off")
+if not ret:
+    logging.error("Unable to power off target 0")
