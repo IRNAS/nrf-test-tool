@@ -73,17 +73,17 @@ uint8_t tca_set_power(uint8_t target, char *state)
     }
 
     res = read_pin(pin);
-    LOG_INF("pin %d OLD state: %d", pin, res);
+    LOG_DBG("pin %d OLD state: %d", pin, res);
     write_pin(pin, new_pin_state_pro);
     res = read_pin(pin);
-    LOG_INF("pin %d NEW state: %d", pin, res);
+    LOG_DBG("pin %d NEW state: %d", pin, res);
 
     pin++;
     res = read_pin(pin);
-    LOG_INF("pin %d OLD state: %d", pin, res);
+    LOG_DBG("pin %d OLD state: %d", pin, res);
     write_pin(pin, new_pin_state_ldo);
     res = read_pin(pin);
-    LOG_INF("pin %d NEW state: %d", pin, res);
+    LOG_DBG("pin %d NEW state: %d", pin, res);
 
     return 0;
 }
@@ -104,10 +104,10 @@ uint8_t tca_set_led(uint8_t channel, char *state)
     }
 
     res = read_pin(pin);
-    LOG_INF("pin %d OLD state: %d", pin, res);
+    LOG_DBG("pin %d OLD state: %d", pin, res);
     write_pin(pin, new_pin_state);
     res = read_pin(pin);
-    LOG_INF("pin %d NEW state: %d", pin, res);
+    LOG_DBG("pin %d NEW state: %d", pin, res);
     
     return 0;
 }
@@ -127,7 +127,7 @@ void test_max_chip(void)
     uint8_t read_A1 = max_read_dir1();  // 
     uint8_t read_B0 = max_read_dir2();  // 
     uint8_t read_B1 = max_read_dir3();  // 
-    LOG_INF("MAX TEST read: A0: %d, A1: %d, A2: %d, A3: %d", read_A0, read_A1, read_B0, read_B1);
+    LOG_INF("MAX TEST read: A0: %d, A1: %d, B0: %d, B1: %d", read_A0, read_A1, read_B0, read_B1);
 }
 
 uint8_t max_set_jtag(int8_t channel) 
@@ -147,24 +147,5 @@ uint8_t max_set_jtag(int8_t channel)
         max_set_B_switches(swdio_line);
         LOG_INF("MAX on CLK: %d, IO: %d", swdclk_line, swdio_line);
     }
-    return 0;
-}
-
-// TODO check this
-/* MAX14661 functions */
-
-uint8_t max_set_A_switches(uint16_t switch_config)
-{
-    uint8_t swA0 = switch_config & 0xFF;  //lower byte configures A08-A01
-    uint8_t swA1 = (switch_config & 0xFF00) >> 8;  //upper byte configures A16-A09
-    max_set_A(swA0, swA1);  // control is done using shadow registers - this allows for simultaneous updates of the switches
-    return 0;
-}
-
-uint8_t max_set_B_switches(uint16_t switch_config)
-{
-    uint8_t swB0 = switch_config & 0xFF;  //lower byte configures B08-B01
-    uint8_t swB1 = (switch_config & 0xFF00) >> 8;  //upper byte configures B16-B09
-    max_set_B(swB0, swB1);
     return 0;
 }

@@ -9,6 +9,20 @@
 // tca driver class instance
 MAX14661 m_max14661;
 
+void max_set_A_switches(uint16_t switch_config)
+{
+    uint8_t swA0 = switch_config & 0xFF;  //lower byte configures A08-A01
+    uint8_t swA1 = (switch_config & 0xFF00) >> 8;  //upper byte configures A16-A09
+    max_set_A(swA0, swA1);      // control is done using shadow registers - this allows for simultaneous updates of the switches
+}
+
+void max_set_B_switches(uint16_t switch_config)
+{
+    uint8_t swB0 = switch_config & 0xFF;  //lower byte configures B08-B01
+    uint8_t swB1 = (switch_config & 0xFF00) >> 8;  //upper byte configures B16-B09
+    max_set_B(swB0, swB1);
+}
+
 void max_clear_all() 
 {
     m_max14661.clearAll();

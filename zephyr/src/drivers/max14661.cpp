@@ -17,10 +17,7 @@ MAX14661::MAX14661(int addr)
     _addr = addr;
 }
 
-MAX14661::~MAX14661()
-{
-
-}
+MAX14661::~MAX14661() { }
 
 void MAX14661::clearAll()
 {

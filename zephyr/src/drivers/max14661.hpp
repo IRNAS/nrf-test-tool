@@ -79,8 +79,8 @@ class MAX14661
          */
         MAX14661(int addr = MAX14661_DEFAULT_ADDRESS);
         ~MAX14661();
-        /** Name the register addresses
-         */
+
+        /** Name the register addresses*/
         enum MAX14661regs {
             REG_DIR0 = 0x00, /**< 8A-1A Direct Access */
             REG_DIR1, /**< 16A-9A Direct Access */
@@ -93,14 +93,13 @@ class MAX14661
             REG_CMD_A, /**< Command A */
             REG_CMD_B /**< Command A */
         };
-        /** Name the command codes
-         */
+
+        /** Name the command codes*/
         enum MAX14661cmds {
         CMD_DIS = 0x10, /**< Disable switches */
         CMD_COPY = 0x11, /**< Copy shadow registers to switches */
         CMD_NOOP = 0x1F /**< Keep current state, no changes */
         };
-        /** Name the switch bits
 
         /* Clears all bits to opens all 32 switches */
         void clearAll();

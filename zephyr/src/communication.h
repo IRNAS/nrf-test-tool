@@ -15,7 +15,4 @@ uint8_t gpio_reset(uint8_t channel);
 void test_max_chip(void);
 uint8_t max_set_jtag(int8_t channel);
 
-uint8_t max_set_A_switches(uint16_t switch_config);
-uint8_t max_set_B_switches(uint16_t switch_config);
-
 #endif  // _COMMUNICATION_H_
