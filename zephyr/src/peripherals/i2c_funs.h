@@ -1,5 +1,5 @@
-#ifndef _I2C_FUNCTIONS_H_
-#define _I2C_FUNCTIONS_H_
+#ifndef _I2C_FUNS_H_
+#define _I2C_FUNS_H_
 
 #include <device.h>
 #include <zephyr.h>
@@ -19,4 +19,4 @@ extern "C"
 } // extern C
 #endif
 
-#endif //_I2C_FUNCTIONS_H_
+#endif //_I2C_FUNS_H_

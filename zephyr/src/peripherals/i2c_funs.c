@@ -1,4 +1,4 @@
-#include "peripherals.h"
+#include "i2c_funs.h"
 
 #include <drivers/i2c.h>
 #include <logging/log.h>

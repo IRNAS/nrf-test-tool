@@ -6,7 +6,7 @@
 #include <zephyr.h>
 #include <logging/log.h>
 
-#include "peripherals.h"
+#include "i2c_funs.h"
 
 LOG_MODULE_REGISTER(MAX14661);
 

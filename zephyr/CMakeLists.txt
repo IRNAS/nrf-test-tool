@@ -9,4 +9,5 @@ zephyr_compile_options(-fdiagnostics-color=always)
 target_sources(app PRIVATE src/main.c src/test_module.c src/communication.c)
 target_sources_ifdef(CONFIG_SHELL_DYNAMIC_CMDS app PRIVATE src/dynamic_cmd.c src/qsort.c)
 
+add_subdirectory(src/peripherals)
 add_subdirectory(src/drivers)

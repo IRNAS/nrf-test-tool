@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <logging/log.h>
 
-#include <peripherals.h>
+#include <i2c_funs.h>
+#include <gpio.h>
 #include <tca_interface.hpp>
 #include <max_interface.hpp>
-#include <gpio.h>
 
 #define LED_CHANNELS_OFFSET     8
 
