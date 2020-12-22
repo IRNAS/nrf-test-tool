@@ -11,10 +11,6 @@ config SHELL_FOREGROUND_CMDS
 	bool "Shell foreground commands example"
 	default y
 
-config SHELL_DYNAMIC_CMDS
-	bool "Shell dynamic commands example"
-	default y
-
 endmenu
 
 source "Kconfig.zephyr"

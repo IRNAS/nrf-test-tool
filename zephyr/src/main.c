@@ -17,70 +17,6 @@
 
 LOG_MODULE_REGISTER(app);
 
-extern void foo(void);
-
-void timer_expired_handler(struct k_timer *timer)
-{
-	LOG_INF("Timer expired.");
-
-	/* Call another module to present logging from multiple sources. */
-	foo();
-}
-
-K_TIMER_DEFINE(log_timer, timer_expired_handler, NULL);
-
-static int cmd_log_test_start(const struct shell *shell, size_t argc,
-			      char **argv, u32_t period)
-{
-	ARG_UNUSED(argv);
-
-	k_timer_start(&log_timer, K_MSEC(period), K_MSEC(period));
-	shell_print(shell, "Log test started\n");
-
-	return 0;
-}
-
-static int cmd_log_test_start_demo(const struct shell *shell, size_t argc,
-				   char **argv)
-{
-	return cmd_log_test_start(shell, argc, argv, 200);
-}
-
-static int cmd_log_test_start_flood(const struct shell *shell, size_t argc,
-				    char **argv)
-{
-	return cmd_log_test_start(shell, argc, argv, 10);
-}
-
-static int cmd_log_test_stop(const struct shell *shell, size_t argc,
-			     char **argv)
-{
-	ARG_UNUSED(argc);
-	ARG_UNUSED(argv);
-
-	k_timer_stop(&log_timer);
-	shell_print(shell, "Log test stopped");
-
-	return 0;
-}
-
-SHELL_STATIC_SUBCMD_SET_CREATE(sub_log_test_start,
-	SHELL_CMD_ARG(demo, NULL,
-		  "Start log timer which generates log message every 200ms.",
-		  cmd_log_test_start_demo, 1, 0),
-	SHELL_CMD_ARG(flood, NULL,
-		  "Start log timer which generates log message every 10ms.",
-		  cmd_log_test_start_flood, 1, 0),
-	SHELL_SUBCMD_SET_END /* Array terminated. */
-);
-SHELL_STATIC_SUBCMD_SET_CREATE(sub_log_test,
-	SHELL_CMD_ARG(start, &sub_log_test_start, "Start log test", NULL, 2, 0),
-	SHELL_CMD_ARG(stop, NULL, "Stop log test.", cmd_log_test_stop, 1, 0),
-	SHELL_SUBCMD_SET_END /* Array terminated. */
-);
-
-SHELL_CMD_REGISTER(log_test, &sub_log_test, "Log test", NULL);
-
 static int cmd_demo_ping(const struct shell *shell, size_t argc, char **argv)
 {
 	ARG_UNUSED(argc);
@@ -262,7 +198,7 @@ static int test_max(const struct shell *shell, size_t argc, char **argv)
 }
 SHELL_CMD_REGISTER(max, NULL, "testing max", test_max);
 
-/* INTERRUPTS */
+/* INTERRUPTS */	// TODO
 void button_1_interrupt_handler(struct device *dev, struct gpio_callback *cb, u32_t pin)
 {
 	disable_button_interrupt(PIN_BUTTON_1);
