@@ -27,6 +27,20 @@ IRNAS nRF test tool for programming, testing and power measurement
 * nrf9160dk board
 * NCS v1.3.0
 
+## Special note about NRF9160DK
+
+In order to run this library on NRF9160 development board, we have to flash onboard NRF52840 with certain GPIO configuration as this chip controls GPIO routing of NRF91.
+In order to do that following steps should be done:
+* Move into `zephyr/samples/hello_world` folder
+* Execute `west build -p -b nrf9160dk_nrf52840`
+* Execute `west build -t menuconfig`
+* Select option `Board options`
+* For each of listed options select option to use them with Arduino headers: UART1, Button 2, LED 2, LED 4
+* Press Q and confirm save
+* Execute `west build -b nrf9160dk_nrf52840 && west flash`
+
+NRF52 chip is now correctly configured for communication with LR1110 EVK shield.
+
 ## Commands to build and run Zephyr code
 1. `cd zephyr`
 1. `west build -p auto -b nrf9160dk_nrf9160ns`
