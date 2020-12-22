@@ -11,14 +11,9 @@
 extern "C"
 {
 #endif
-    // i2c functions
+
     void write_reg(uint8_t address, uint8_t reg, uint8_t val);
     uint8_t read_reg(uint8_t address, uint8_t reg);
-
-    //gpio functions    TODO
-    //void enable_gpio_pin(uint8_t pin);
-    //void disable_gpio_pin(uint8_t pin);
-    //int read_gpio_pin(uint8_t pin);
 
 #ifdef __cplusplus
 } // extern C

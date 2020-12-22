@@ -180,7 +180,7 @@ static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 	{
 		shell_print(shell, "Received command: jtag channel %d on.", channel);
 	}
-	max_set_jtag(channel);
+	int err = max_set_jtag(channel);	// TODO return OK or ERR
 	shell_print(shell, "OK");
 	return 0;
 }
@@ -291,6 +291,7 @@ void main(void)
 	LOG_INF("Nrf test tool: Hello");
 	initialize_peripherals();
 
+	// TODO
 	// enable_pin(PIN_NRF52_RESET_T0);
 	// k_sleep(K_SECONDS(5));
 	// disable_pin(PIN_NRF52_RESET_T0);

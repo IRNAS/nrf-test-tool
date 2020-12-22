@@ -3,7 +3,6 @@
 #include "max_interface.hpp"
 
 #include <zephyr.h>
-
 #include "max14661.hpp"
 
 // tca driver class instance
@@ -26,6 +25,8 @@ void max_set_B_switches(uint16_t switch_config)
 void max_clear_all() 
 {
     m_max14661.clearAll();
+    max_set_A_switches(0);
+    max_set_B_switches(0);
 }
 
 void max_set_A(uint8_t swA0, uint8_t swA1)

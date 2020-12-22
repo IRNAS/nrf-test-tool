@@ -1,4 +1,3 @@
-// TODO wrapper functions for drivers
 #include "communication.h"
 
 #include <stdlib.h>
@@ -9,21 +8,24 @@
 #include <max_interface.hpp>
 #include <gpio.h>
 
-#define MAX_SD_PIN              2
-#define JTAG_ROUTE_OUT          11
 #define LED_CHANNELS_OFFSET     8
 
 LOG_MODULE_REGISTER(communication);
 
 void initialize_peripherals(void) 
 {
+    // init gpio and i2c
     dk_gpio_init();
 	//configure_all_reset_pins();
     i2c_init();
 
+    // init TCA chip
     tca_init();
 
-    enable_pin(MAX_SD_PIN);
+    // init MAX chip
+    configure_pin(PIN_JTAG_ROUTE_OUT, GPIO_OUTPUT);
+    configure_pin(PIN_MAX_SD, GPIO_OUTPUT);
+    enable_pin(PIN_MAX_SD);
     max_clear_all();
 }
 
@@ -45,7 +47,7 @@ void test_tca_chip(void)
         }
         int res = read_bank(i);
         LOG_INF("%d result: %x", i, res);
-        k_msleep(10);
+        k_sleep(K_MSEC(10));
     }
 }
 
@@ -123,26 +125,27 @@ uint8_t gpio_reset(uint8_t channel)
 
 void test_max_chip(void)  
 {
-    uint8_t read_A0 = max_read_dir0();  // should be 0
-    uint8_t read_A1 = max_read_dir1();  // 
-    uint8_t read_B0 = max_read_dir2();  // 
-    uint8_t read_B1 = max_read_dir3();  // 
+    uint8_t read_A0 = max_read_dir0();
+    uint8_t read_A1 = max_read_dir1();
+    uint8_t read_B0 = max_read_dir2();
+    uint8_t read_B1 = max_read_dir3();
     LOG_INF("MAX TEST read: A0: %d, A1: %d, B0: %d, B1: %d", read_A0, read_A1, read_B0, read_B1);
 }
 
 uint8_t max_set_jtag(int8_t channel) 
 {
-    max_set_A_switches(0);
-    max_set_B_switches(0);
+    max_clear_all();
     if (channel == -1)
 	{
+        disable_pin(PIN_JTAG_ROUTE_OUT);
         LOG_INF("MAX all off");
     }
     else 
     {
-        enable_pin(JTAG_ROUTE_OUT);
-        uint16_t swdclk_line = 1 << channel;
-        uint16_t swdio_line = 1 << (channel + 1);
+        enable_pin(PIN_JTAG_ROUTE_OUT);
+        uint8_t line = channel * 2;
+        uint16_t swdclk_line = 1 << line;
+        uint16_t swdio_line = 1 << (line + 1);
         max_set_A_switches(swdclk_line);
         max_set_B_switches(swdio_line);
         LOG_INF("MAX on CLK: %d, IO: %d", swdclk_line, swdio_line);

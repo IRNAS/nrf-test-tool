@@ -3,7 +3,6 @@
 #include "tca_interface.hpp"
 
 #include <zephyr.h>
-
 #include "tca6424.hpp"
 
 // tca driver class instance
