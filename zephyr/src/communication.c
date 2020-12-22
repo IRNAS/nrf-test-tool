@@ -16,7 +16,7 @@ void initialize_peripherals(void)
 {
     // init gpio and i2c
     dk_gpio_init();
-	//configure_all_reset_pins();
+	configure_all_reset_pins();
     i2c_init();
 
     // init TCA chip
@@ -118,7 +118,7 @@ uint8_t gpio_reset(uint8_t channel)
 {
     uint8_t pin = channel + 3;  // gpio pins start with number 3 and end with 10
     enable_pin(pin);
-    k_msleep(100);
+    k_sleep(K_MSEC(100));
     disable_pin(pin);
     return 0;
 }

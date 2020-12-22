@@ -29,8 +29,14 @@ IRNAS nRF test tool for programming, testing and power measurement
 
 ## Special note about NRF9160DK
 
-In order to run this library on NRF9160 development board, we have to flash onboard NRF52840 with certain GPIO configuration as this chip controls GPIO routing of NRF91.
-In order to do that following steps should be done:
+In order to run this library on NRF9160 development board, we have to flash onboard NRF52840 with certain GPIO configuration as this chip controls GPIO routing of NRF91. 
+
+* We have to reroute pins: P0.02 - P0.09 to headers.
+* Hex file (`nrf52840-pin-reroutes.hex`) was already generated for this purpose
+* Flip the switch PROG/DEBUG on dev kit to nrf52
+* Then flash using the following command: `west flash`
+
+If above .hex file doesn't work, the following steps need to be done:
 * Move into `zephyr/samples/hello_world` folder
 * Execute `west build -p -b nrf9160dk_nrf52840`
 * Execute `west build -t menuconfig`
