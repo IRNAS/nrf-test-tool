@@ -26,6 +26,7 @@ IRNAS nRF test tool for programming, testing and power measurement
 ## Requirements
 * nrf9160dk board
 * NCS v1.3.0
+* To send data to grafana install: `python3 -m pip install influxdb`
 
 ## Special note about NRF9160DK
 
