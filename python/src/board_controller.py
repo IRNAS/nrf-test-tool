@@ -1,7 +1,7 @@
 import time
 import logging
 
-from src.serial_handler import SerialHandler
+from nrf_test_tool.python.src.serial_handler import SerialHandler
 
 class PowerCommandEnum():
     ON = "on"
