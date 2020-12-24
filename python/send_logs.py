@@ -9,6 +9,7 @@ import sys
 
 from src.board_controller import BoardController
 from src.serial_handler import SerialHandler
+from ..src.power_profiler import PowerProfiler
 
 from influxdb import InfluxDBClient
 
@@ -58,6 +59,32 @@ def send_influxdb(uart_data, device_id):
         result = influx_client.write_points(json_body)
         #log.info("Write data result: " + str(result))
 
+def send_influxdb_power(average_power_consumption_mWh, average_current_mA, minimum_current_mA, maximum_current_mA):
+    # send test data to influx db
+    
+    #uart_data = "heh"
+    #device_id = "123456789"
+
+    json_body = []
+    if len(uart_data) != 0:
+        for line in uart_data:
+            json_body.append(
+                {
+                    "measurement": "log-test-vid",
+                    "tags": {
+                        "device-id": device_id
+                    },
+                    "fields": {
+                        "uart_out": line
+                    }
+                }
+            )
+    
+        # "time": get_current_timestamp() if added, data doesn't show in grafana dashboard
+
+        result = influx_client.write_points(json_body)
+        #log.info("Write data result: " + str(result))
+
 def signal_handler(signal, frame):
     """Handler method for OS signal SIGTERM, clean resources and exit program gracefully."""
     log.warning("SIGTERM received, exiting program.")
@@ -65,6 +92,8 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 def program_exit():
+    # disable power output from ppk
+    power_profiler.disable_power()
     # turn off power for all targets on nrf-test-tool
     for i in range(4):
         ret = board_controller.set_power(i, "off")
@@ -86,6 +115,22 @@ def device_uart_thread_fun(uart_line, device_id):
         if len(line) != 0:
             uart_data = [line]
             send_influxdb(uart_data, device_id)
+
+def device_measure_power(power_prof, device_id, measurement_duration):
+    # power_prof object, device id (0-3), measurement_duration in seconds
+    while True:
+        power_prof.start_measuring()
+        log.info("Measuring started")
+        time.sleep(measurement_duration)
+        power_prof.stop_measuring()
+        log.info("Measuring stopped")
+
+        average_power_consumption_mWh = power_prof.get_average_power_consumption_mWh()
+        average_current_mA = power_prof.get_average_current_mA()
+        minimum_current_mA = power_prof.get_min_current_mA()
+        maximum_current_mA = power_prof.get_max_current_mA()
+
+        send_influxdb_power(average_power_consumption_mWh, average_current_mA, minimum_current_mA, maximum_current_mA)
 
 
 # --------------------------- Main code ---------------------------
@@ -111,6 +156,11 @@ ret = board_controller.set_power(3, "on")
 if not ret:
     log.error("Unable to enable on power on target 0")
 
+# init power profiler
+log.info("init power ")
+power_profiler = PowerProfiler("/dev/ttyACM3", 3000)
+power_profiler.enable_power()   # enable output power
+
 # init influxdb connection
 log.info("influx init")
 influx_client = init_influxdb()
@@ -125,6 +175,7 @@ th0 = threading.Thread(target=device_uart_thread_fun, args=("/dev/ttyUSB0", 0,),
 th1 = threading.Thread(target=device_uart_thread_fun, args=("/dev/ttyUSB1", 1,), daemon=True)
 th2 = threading.Thread(target=device_uart_thread_fun, args=("/dev/ttyUSB2", 2,), daemon=True)
 th3 = threading.Thread(target=device_uart_thread_fun, args=("/dev/ttyUSB3", 3,), daemon=True)
+th_pw = threading.Thread(target=device_measure_power, args=(power_profiler, 0, 10), daemon=True)
 
 # start threads
 log.info("starting threads")
@@ -132,6 +183,7 @@ th0.start()
 th1.start()
 th2.start()
 th3.start()
+th_pw.start()
 
 while True:
     time.sleep(1)
