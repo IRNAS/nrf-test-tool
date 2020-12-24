@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import serial
 
+
 class SerialHandler:
 
     def __init__(self, serial_port, baudrate, timeout=2):
@@ -14,7 +15,7 @@ class SerialHandler:
     def read(self):
         received = self.ser.readline()
         # print("RS: ", received)
-        return received.decode("utf-8").rstrip()
+        return received.decode("utf-8").strip()
 
     def write(self, data):
         data += "\n"
