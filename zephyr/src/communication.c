@@ -24,8 +24,6 @@ void initialize_peripherals(void)
 
     // init MAX chip
     configure_pin(PIN_JTAG_ROUTE_OUT, GPIO_OUTPUT);
-    configure_pin(PIN_MAX_SD, GPIO_OUTPUT);
-    enable_pin(PIN_MAX_SD);
     max_clear_all();
 }
 

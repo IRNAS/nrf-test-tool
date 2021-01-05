@@ -30,9 +30,9 @@ void i2c_scan(void)
     uint8_t error = 0u;
 
     /*start and configure i2c*/
-    LOG_INF("Value of NRF_TWIM3_NS->PSEL.SCL: %d ", NRF_TWIM2_NS->PSEL.SCL);
-    LOG_INF("Value of NRF_TWIM3_NS->PSEL.SDA: %d ", NRF_TWIM2_NS->PSEL.SDA);
-    LOG_INF("Value of NRF_TWIM3_NS->FREQUENCY: %d ", NRF_TWIM2_NS->FREQUENCY);
+    // LOG_INF("Value of NRF_TWIM3_NS->PSEL.SCL: %d ", NRF_TWIM2_NS->PSEL.SCL);
+    // LOG_INF("Value of NRF_TWIM3_NS->PSEL.SDA: %d ", NRF_TWIM2_NS->PSEL.SDA);
+    // LOG_INF("Value of NRF_TWIM3_NS->FREQUENCY: %d ", NRF_TWIM2_NS->FREQUENCY);
 
     int found[0x77 - 4];
     int found_i = 0;
