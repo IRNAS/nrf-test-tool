@@ -24,6 +24,11 @@ int dk_gpio_init(void)
         LOG_ERR("Cannot bind gpio device");
         return -ENODEV;
     }
+    
+    configure_pin(UART_RX_ENABLE, GPIO_OUTPUT);
+    enable_pin(UART_RX_ENABLE);
+    configure_pin(UART_TX_ENABLE, GPIO_OUTPUT);
+    enable_pin(UART_TX_ENABLE);
 
     return err;
 }

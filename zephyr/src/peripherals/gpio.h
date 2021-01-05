@@ -3,9 +3,10 @@
 
 #include <drivers/gpio.h>
 
-// MAX chip configuration pins
-#define PIN_MAX_SD          2
-#define PIN_JTAG_ROUTE_OUT  11
+// General
+#define UART_RX_ENABLE 11
+#define UART_TX_ENABLE 13
+#define PIN_JTAG_ROUTE_OUT  12
 
 // Buttons
 #define PIN_BUTTON_1        16
