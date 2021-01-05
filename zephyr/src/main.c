@@ -198,6 +198,13 @@ static int test_max(const struct shell *shell, size_t argc, char **argv)
 }
 SHELL_CMD_REGISTER(max, NULL, "testing max", test_max);
 
+static int test_adc(const struct shell *shell, size_t argc, char **argv)
+{
+	test_adc_chip();
+	return 0;
+}
+SHELL_CMD_REGISTER(adc, NULL, "testing adc", test_adc);
+
 /* INTERRUPTS */	// TODO
 void button_1_interrupt_handler(struct device *dev, struct gpio_callback *cb, u32_t pin)
 {

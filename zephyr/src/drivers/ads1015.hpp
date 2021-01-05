@@ -99,20 +99,16 @@
 
 /** Gain settings */
 typedef enum {
-  GAIN_TWOTHIRDS = ADS1015_REG_CONFIG_PGA_6_144V,
-  GAIN_ONE = ADS1015_REG_CONFIG_PGA_4_096V,
-  GAIN_TWO = ADS1015_REG_CONFIG_PGA_2_048V,
-  GAIN_FOUR = ADS1015_REG_CONFIG_PGA_1_024V,
-  GAIN_EIGHT = ADS1015_REG_CONFIG_PGA_0_512V,
-  GAIN_SIXTEEN = ADS1015_REG_CONFIG_PGA_0_256V
+    GAIN_TWOTHIRDS = ADS1015_REG_CONFIG_PGA_6_144V,
+    GAIN_ONE = ADS1015_REG_CONFIG_PGA_4_096V,
+    GAIN_TWO = ADS1015_REG_CONFIG_PGA_2_048V,
+    GAIN_FOUR = ADS1015_REG_CONFIG_PGA_1_024V,
+    GAIN_EIGHT = ADS1015_REG_CONFIG_PGA_0_512V,
+    GAIN_SIXTEEN = ADS1015_REG_CONFIG_PGA_0_256V
 } adsGain_t;
+class ADS1015 
+{
 
-/**************************************************************************/
-/*!
-    @brief  Sensor driver for the Adafruit ADS1015 ADC breakout.
-*/
-/**************************************************************************/
-class ADS1015 {
     protected:
         // Instance-specific properties
         uint8_t m_i2cAddress;      ///< the I2C address
@@ -126,11 +122,9 @@ class ADS1015 {
         int16_t readADC_Differential_0_1(void);
         int16_t readADC_Differential_2_3(void);
         void startComparator_SingleEnded(uint8_t channel, int16_t threshold);
-        int16_t getLastConversionResults();
+        int16_t getLastConversionResults(void);
         void setGain(adsGain_t gain);
         adsGain_t getGain(void);
-
-    private:
 };
 
 #endif

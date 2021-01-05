@@ -6,41 +6,50 @@
 #include "ads1015.hpp"
 
 // tca driver class instance
-ADS1015 m_ADS1015;
+ADS1015 m_ADS1015[4];
 
-void ads_set_gain(adsGain_t gain) 
+// init all four ADS1015 chips
+void ads_init()
 {
-    m_ADS1015.setGain(gain);
+    m_ADS1015[0] = ADS1015(0x48);
+    m_ADS1015[1] = ADS1015(0x49);
+    m_ADS1015[2] = ADS1015(0x4a);
+    m_ADS1015[3] = ADS1015(0x4b);
 }
 
-adsGain_t ads_get_gain() 
+void ads_set_gain(uint8_t target, adsGain_t gain) 
 {
-    return m_ADS1015.getGain();
+    m_ADS1015[target].setGain(gain);
 }
 
-uint16_t ads_read_ADC_single_ended(uint8_t channel)
+adsGain_t ads_get_gain(uint8_t target) 
 {
-    return m_ADS1015.readADC_SingleEnded(channel);
+    return m_ADS1015[target].getGain();
 }
 
-int16_t ads_read_ADC_differential_0_1()
+uint16_t ads_read_ADC_single_ended(uint8_t target, uint8_t channel)
 {
-    return m_ADS1015.readADC_Differential_0_1();
+    return m_ADS1015[target].readADC_SingleEnded(channel);
 }
 
-int16_t ads_read_ADC_differential_2_3()
+int16_t ads_read_ADC_differential_0_1(uint8_t target)
 {
-    return m_ADS1015.readADC_Differential_2_3();
+    return m_ADS1015[target].readADC_Differential_0_1();
 }
 
-void ads_start_comparator_single_ended(uint8_t channel, int16_t threshold)
+int16_t ads_read_ADC_differential_2_3(uint8_t target)
 {
-    m_ADS1015.startComparator_SingleEnded(channel, threshold);
+    return m_ADS1015[target].readADC_Differential_2_3();
 }
 
-int16_t ads_get_last_conversion_result()
+void ads_start_comparator_single_ended(uint8_t target, uint8_t channel, int16_t threshold)
 {
-    return m_ADS1015.getLastConversionResults();
+    m_ADS1015[target].startComparator_SingleEnded(channel, threshold);
+}
+
+int16_t ads_get_last_conversion_result(uint8_t target)
+{
+    return m_ADS1015[target].getLastConversionResults();
 }
 
 #endif //__cplusplus
