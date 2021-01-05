@@ -1,12 +1,21 @@
 import time
 import logging
 
-from src.serial_handler import SerialHandler
+from .serial_handler import SerialHandler
 
-class CommandEnum():
+class PowerCommandEnum():
     ON = "on"
     OFF = "off"
     PPK = "ppk"
+
+class JtagDeviceEnum():
+    NRF52 = 0
+    NRF91 = 1
+    DISABLE = -1
+
+class LedColorEnum():
+    GREEN = 0
+    RED = 1
 
 class BoardController():
     def __init__(self, serial_port, baudrate, timeout):
@@ -18,7 +27,7 @@ class BoardController():
             logging.warning(f"Invalid target: {target}. Valid targets: 0-3.")
             return False
 
-        if type(state) != str or (state != CommandEnum.ON and state != CommandEnum.OFF and state != CommandEnum.PPK):
+        if type(state) != str or (state != PowerCommandEnum.ON and state != PowerCommandEnum.OFF and state != PowerCommandEnum.PPK):
             logging.warning(f'Invalid state: {state}. Valid states are "on", "off" and "ppk"')
             return False
 
@@ -26,14 +35,14 @@ class BoardController():
 
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         if ret == "OK":
-            logging.info(f"Successfully read from serial: {ret}")
+            logging.info(f"Successfully read from serial for cmd set_power: {ret}")
             return True
         if ret == "ERROR":
-            logging.error(f"Failed to read from serial: {ret}")
+            logging.error(f"Failed to read from serial for cmd set_power: {ret}")
             return False
 
     def set_jtag(self, channel):
-        """Enable jtag to channel 0-7 or disbale all with off"""
+        """Enable jtag to channel 0-7 or disable all with -1"""
         if type(channel) != int or channel < -1 or channel > 7:
             logging.warning(f"Invalid channel: {channel}. Valid channels: 0-7 or -1 for all off")
             return False
@@ -42,10 +51,27 @@ class BoardController():
 
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         if ret == "OK":
-            logging.info(f"Successfully read from serial: {ret}")
+            logging.info(f"Successfully read from serial for cmd: {ret}")
             return True
         if ret == "ERROR":
-            logging.error(f"Failed to read from serial: {ret}")
+            logging.error(f"Failed to read from serial for cmd: {ret}")
+            return False
+
+    def set_jtag_on_target(self, target, jtag_device):
+        """Enable jtag for jtag_device (nrf91 or nrf52) on desired target (0-3)"""
+        if type(target) != int or target < 0 or target > 3:
+            logging.warning(f"Invalid target: {target}. Valid targets: 0-3!")
+            return False
+
+        channel = target * 2 + jtag_device
+        self.ser.write(f"jtag {channel}")
+
+        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        if ret == "OK":
+            logging.info(f"Successfully read from serial for cmd: {ret}")
+            return True
+        if ret == "ERROR":
+            logging.error(f"Failed to read from serial for cmd: {ret}")
             return False
 
     def reset(self, channel):
@@ -58,10 +84,10 @@ class BoardController():
 
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         if ret == "OK":
-            logging.info(f"Successfully read from serial: {ret}")
+            logging.info(f"Successfully read from serial for cmd: {ret}")
             return True
         if ret == "ERROR":
-            logging.error(f"Failed to read from serial: {ret}")
+            logging.error(f"Failed to read from serial for cmd: {ret}")
             return False
 
     def read_adc(self, channel):
@@ -74,10 +100,10 @@ class BoardController():
 
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         if ret == "OK":
-            logging.info(f"Successfully read from serial: {ret}")
+            logging.info(f"Successfully read from serial for cmd: {ret}")
             return True  # TODO return actual value insted of True
         if ret == "ERROR":
-            logging.error(f"Failed to read from serial: {ret}")
+            logging.error(f"Failed to read from serial for cmd: {ret}")
             return False
 
     def control_led(self, channel, state):
@@ -86,7 +112,7 @@ class BoardController():
             logging.warning(f"Invalid channel: {channel}. Valid channels: 0-7.")
             return False
 
-        if type(state) != str or (state != CommandEnum.ON and state != CommandEnum.OFF):
+        if type(state) != str or (state != PowerCommandEnum.ON and state != PowerCommandEnum.OFF):
             logging.warning(f'Invalid state: {state}. Valid states are "on", "off')
             return False
 
@@ -94,8 +120,29 @@ class BoardController():
 
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         if ret == "OK":
-            logging.info(f"Successfully read from serial: {ret}")
+            logging.info(f"Successfully read from serial for cmd: {ret}")
             return True
         if ret == "ERROR":
-            logging.error(f"Failed to read from serial: {ret}")
+            logging.error(f"Failed to read from serial for cmd: {ret}")
+            return False
+
+    def control_led_on_target(self, target, color, state):
+        """Control led on target 0-3, color=red/green, state = on/off"""
+        if type(target) != int or target < 0 or target > 3:
+            logging.warning(f"Invalid target: {target}. Valid targets: 0-3!")
+            return False
+
+        if type(state) != str or (state != PowerCommandEnum.ON and state != PowerCommandEnum.OFF):
+            logging.warning(f'Invalid state: {state}. Valid states are "on", "off')
+            return False
+
+        channel = target * 2 + color
+        self.ser.write(f"led {channel} {state}")
+
+        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        if ret == "OK":
+            logging.info(f"Successfully read from serial for cmd: {ret}")
+            return True
+        if ret == "ERROR":
+            logging.error(f"Failed to read from serial for cmd: {ret}")
             return False

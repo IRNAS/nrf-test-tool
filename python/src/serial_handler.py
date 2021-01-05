@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
 import serial
-import logging
+
 
 class SerialHandler:
 
     def __init__(self, serial_port, baudrate, timeout=2):
         self.ser = serial.Serial(serial_port, baudrate, timeout=timeout)
 
+    def __del__(self):
+        if self.ser:
+            self.ser.close()
+            self.ser = None
+
     def read(self):
         received = self.ser.readline()
-        return received.decode("utf-8").rstrip()
+        # print("RS: ", received)
+        return received.decode("utf-8").strip()
 
     def write(self, data):
-        logging.info(f"Writing: {data}")
         data += "\n"
+        # print("WS: ", data)
         self.ser.write(data.encode())
 
     def read_until(self, s):
