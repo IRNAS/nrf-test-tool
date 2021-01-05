@@ -120,7 +120,7 @@ static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 	shell_print(shell, "OK");
 	return 0;
 }
-SHELL_CMD_ARG_REGISTER(jtag, NULL, "parameters: <channel num (0-7) or off>", cmd_jtag, 2, 0);
+SHELL_CMD_ARG_REGISTER(jtag, NULL, "parameters: <channel num (0-7) or -1 (off)>", cmd_jtag, 2, 0);
 
 static int cmd_reset(const struct shell *shell, size_t argc, char **argv)
 {
