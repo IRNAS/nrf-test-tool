@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*!
-    @file     Adafruit_ADS1015.h
+    @file     Adafruit_ads1015.hpp
     This is a library for the Adafruit ADS1X15 ADC breakout boards.
     Adafruit invests time and resources providing this open source code,
     please support Adafruit and open-source hardware by purchasing

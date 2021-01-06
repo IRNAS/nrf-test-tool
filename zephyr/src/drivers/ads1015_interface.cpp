@@ -17,15 +17,15 @@ void ads_init()
     m_ADS1015[3] = ADS1015(0x4b);
 }
 
-void ads_set_gain(uint8_t target, adsGain_t gain) 
-{
-    m_ADS1015[target].setGain(gain);
-}
+// void ads_set_gain(uint8_t target, adsGain_t gain) 
+// {
+//     m_ADS1015[target].setGain(gain);
+// }
 
-adsGain_t ads_get_gain(uint8_t target) 
-{
-    return m_ADS1015[target].getGain();
-}
+// adsGain_t ads_get_gain(uint8_t target) 
+// {
+//     return m_ADS1015[target].getGain();
+// }
 
 uint16_t ads_read_ADC_single_ended(uint8_t target, uint8_t channel)
 {

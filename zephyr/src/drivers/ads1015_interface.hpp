@@ -1,18 +1,17 @@
 #ifndef _ADS1015_INTERFACE_HPP_
 #define _ADS1015_INTERFACE_HPP_
-
-#include "ads1015.hpp"
 #include <zephyr.h>
 
 #ifdef __cplusplus
+
 extern "C"
 {
 #endif
 
     void ads_init(void);
 
-    void ads_set_gain(uint8_t target, adsGain_t gain);
-    adsGain_t ads_get_gain(uint8_t target);
+    // void ads_set_gain(uint8_t target, adsGain_t gain);
+    // adsGain_t ads_get_gain(uint8_t target);
 
     uint16_t ads_read_ADC_single_ended(uint8_t target, uint8_t channel);
     int16_t ads_read_ADC_differential_0_1(uint8_t target);

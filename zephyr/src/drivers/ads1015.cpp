@@ -35,7 +35,7 @@ ADS1015::ADS1015(uint8_t i2cAddress) {
     m_i2cAddress = i2cAddress;
     m_conversionDelay = ADS1015_CONVERSIONDELAY;
     m_bitShift = 4;
-    m_gain = GAIN_TWOTHIRDS; /* +/- 6.144V range (limited to VDD +0.3V max!) */
+    m_gain = GAIN_ONE; /* +/- 6.144V range (limited to VDD +0.3V max!) */
 }
 
 /**************************************************************************/
@@ -75,6 +75,7 @@ uint16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
         ADS1015_REG_CONFIG_CMODE_TRAD |   // Traditional comparator (default val)
         ADS1015_REG_CONFIG_DR_1600SPS |   // 1600 samples per second (default)
         ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
+        //ADS1015_REG_CONFIG_MODE_CONTIN;
 
     // Set PGA/voltage range
     config |= m_gain;
@@ -99,18 +100,27 @@ uint16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
     // Set 'start single-conversion' bit
     config |= ADS1015_REG_CONFIG_OS_SINGLE;
 
+    printk("Set config register %d \n", config);
+
     // Write config register to the ADC
     //writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
-    write_reg(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    write_word(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
 
     // Wait for the conversion to complete
     //delay(m_conversionDelay);
     k_sleep(K_MSEC(ADS1015_CONVERSIONDELAY));
 
+    // uint16_t config_register = read_word(m_i2cAddress, ADS1015_REG_POINTER_CONFIG);
+    // printk("Read config register %d \n", config_register);
+
+
+    // write_empty(m_i2cAddress, ADS1015_REG_POINTER_CONVERT);
     // Read the conversion results
     // Shift 12-bit results right 4 bits for the ADS1015
     //return readRegister(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
-    return read_reg(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
+    uint16_t result = read_word(m_i2cAddress, ADS1015_REG_POINTER_CONVERT);
+    printk("Conversion result %d \n", result);
+    return result >> m_bitShift;
 }
 
 /**************************************************************************/
