@@ -106,3 +106,58 @@ uint8_t read_reg(uint8_t address, uint8_t reg)
     }
     return read_data;
 }
+
+/*
+ * @brief Writes value to register over I2C
+ *
+ * @param reg
+ * @param val
+ *
+ */
+void write_word(uint8_t address, uint8_t reg, uint16_t val)
+{
+    uint8_t buf[3] = {reg, val >> 8, val & 0xff};
+    //printk("High byte of config register %d \n", buf[1]);
+    //printk("Low byte of config register %d \n", buf[2]);
+    if (i2c_write(i2c_dev, buf, 3, address) != 0)
+    {
+        LOG_ERR("Error on i2c_write()");
+    }
+    else
+    {
+        //LOG_DBG("i2c_write: no error");
+    }
+}
+
+/*
+ * @brief Reads value from register over I2C
+ *
+ * @param reg
+ *
+ * @return content of reg
+ */
+
+uint16_t read_word(uint8_t address, uint8_t reg)
+{
+    uint8_t read_data[2];
+    if (i2c_burst_read(i2c_dev, address, reg, read_data, 2) != 0)
+    {
+        LOG_ERR("Error on i2c_read()");
+    }
+    else
+    {
+        //LOG_DBG("i2c_read: no error\r");
+    }
+    //printk("Read high byte %d \n", read_data[0]);
+    //printk("Read low byte %d \n", read_data[1]);
+    return read_data[0] << 8 | read_data[1];
+}
+
+void write_empty(uint8_t address, uint8_t reg) 
+{
+    uint8_t temp = 0;
+    if (i2c_write(i2c_dev, &temp, 0, address) != 0)
+    {
+        LOG_ERR("Error on i2c_write()");
+    }
+}
