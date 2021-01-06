@@ -72,10 +72,12 @@ class BoardController():
 
         self.ser.write(f"adc {channel}")
 
+        read_line = self.ser.read_until_starts_with("(mV): ")
+        voltage = read_line.split(": ")[1]
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         if ret == "OK":
             logging.info(f"Successfully read from serial: {ret}")
-            return True  # TODO return actual value insted of True
+            return voltage
         if ret == "ERROR":
             logging.error(f"Failed to read from serial: {ret}")
             return False
