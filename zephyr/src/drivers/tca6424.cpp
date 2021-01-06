@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include "tca6424.hpp"
 #include <zephyr.h>
 
-#include "peripherals.h"
+#include "i2c_funs.h"
 
 /** Default constructor, uses default I2C address.
  * @see TCA6424A_DEFAULT_ADDRESS

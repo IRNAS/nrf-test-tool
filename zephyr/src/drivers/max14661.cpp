@@ -1,14 +1,12 @@
 /******************************************************************//**
     https://www.mouser.com/datasheet/2/256/maxrefdes72-quick-start-guide-587807.pdf
 **********************************************************************/
- 
- 
 #include "max14661.hpp"
  
 #include <zephyr.h>
 #include <logging/log.h>
 
-#include "peripherals.h"
+#include "i2c_funs.h"
 
 LOG_MODULE_REGISTER(MAX14661);
 
@@ -17,10 +15,7 @@ MAX14661::MAX14661(int addr)
     _addr = addr;
 }
 
-MAX14661::~MAX14661()
-{
-
-}
+MAX14661::~MAX14661() { }
 
 void MAX14661::clearAll()
 {

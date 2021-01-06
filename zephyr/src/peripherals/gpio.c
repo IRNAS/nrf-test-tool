@@ -1,6 +1,9 @@
-#include <gpio.h>
+#include "gpio.h"
 
+#include <zephyr.h>
+#include <drivers/gpio.h>
 #include <logging/log.h>
+
 LOG_MODULE_REGISTER(pins);
 
 struct device *gpio_dev;
@@ -21,28 +24,18 @@ int dk_gpio_init(void)
         LOG_ERR("Cannot bind gpio device");
         return -ENODEV;
     }
+    
+    configure_pin(UART_RX_ENABLE, GPIO_OUTPUT);
+    enable_pin(UART_RX_ENABLE);
+    configure_pin(UART_TX_ENABLE, GPIO_OUTPUT);
+    enable_pin(UART_TX_ENABLE);
 
     return err;
 }
 
-// pin configurations
-void configure_all_reset_pins(void)
+void configure_pin(uint8_t pin, uint32_t direction) 
 {
-    // configure target 0 pins
-    gpio_pin_configure(gpio_dev, PIN_NRF52_RESET_T0, GPIO_OUTPUT);
-    gpio_pin_configure(gpio_dev, PIN_NRF91_RESET_T0, GPIO_OUTPUT);
-
-    // configure target 1 pins
-    gpio_pin_configure(gpio_dev, PIN_NRF52_RESET_T1, GPIO_OUTPUT);
-    gpio_pin_configure(gpio_dev, PIN_NRF91_RESET_T1, GPIO_OUTPUT);
-
-    // configure target 2 pins
-    gpio_pin_configure(gpio_dev, PIN_NRF52_RESET_T2, GPIO_OUTPUT);
-    gpio_pin_configure(gpio_dev, PIN_NRF91_RESET_T2, GPIO_OUTPUT);
-
-    // configure target 3 pins
-    gpio_pin_configure(gpio_dev, PIN_NRF52_RESET_T3, GPIO_OUTPUT);
-    gpio_pin_configure(gpio_dev, PIN_NRF91_RESET_T3, GPIO_OUTPUT);
+    gpio_pin_configure(gpio_dev, pin, direction);
 }
 
 void enable_pin(uint8_t pin)
@@ -63,6 +56,26 @@ void disable_pin(uint8_t pin)
 //     gpio_pin_set(gpio_dev, pin, 0);
 //     k_sleep(K_MSEC(20));
 // }
+
+// pin configurations
+void configure_all_reset_pins(void)
+{
+    // configure target 0 pins
+    configure_pin(PIN_NRF52_RESET_T0, GPIO_OUTPUT);
+    configure_pin(PIN_NRF91_RESET_T0, GPIO_OUTPUT);
+
+    // configure target 1 pins
+    configure_pin(PIN_NRF52_RESET_T1, GPIO_OUTPUT);
+    configure_pin(PIN_NRF91_RESET_T1, GPIO_OUTPUT);
+
+    // configure target 2 pins
+    configure_pin(PIN_NRF52_RESET_T2, GPIO_OUTPUT);
+    configure_pin(PIN_NRF91_RESET_T2, GPIO_OUTPUT);
+
+    // configure target 3 pins
+    configure_pin(PIN_NRF52_RESET_T3, GPIO_OUTPUT);
+    configure_pin(PIN_NRF91_RESET_T3, GPIO_OUTPUT);
+}
 
 struct k_delayed_work work_enable_button_1_interrupt;
 

@@ -1,4 +1,3 @@
-python/src/__pycache__/*
-__pycache__/*
 zephyr/build/*
 .vscode/*
+**/__pycache__/*
