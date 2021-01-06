@@ -13,6 +13,7 @@ uint8_t tca_set_led(uint8_t channel, char *state);
 uint8_t gpio_reset(uint8_t channel);
 
 void test_adc_chip(void);
+uint16_t adc_read_voltage(uint8_t target, uint8_t channel);
 
 void test_max_chip(void);
 uint8_t max_set_jtag(int8_t channel);

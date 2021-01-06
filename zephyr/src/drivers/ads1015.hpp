@@ -96,16 +96,14 @@
 #define ADS1015_REG_CONFIG_CQUE_4CONV (0x0002) ///< Assert ALERT/RDY after four conversions
 #define ADS1015_REG_CONFIG_CQUE_NONE (0x0003) ///< Disable the comparator and put ALERT/RDY in high state (default)
 /*=========================================================================*/
-
+#define GAIN_TWOTHIRDS (0x0000)
+#define GAIN_ONE (0x0200)
+#define GAIN_TWO (0x0400)
+#define GAIN_FOUR (0x0600)
+#define GAIN_EIGHT (0x0800)
+#define GAIN_SIXTEEN (0x0A00)
 /** Gain settings */
-typedef enum {
-    GAIN_TWOTHIRDS = ADS1015_REG_CONFIG_PGA_6_144V,
-    GAIN_ONE = ADS1015_REG_CONFIG_PGA_4_096V,
-    GAIN_TWO = ADS1015_REG_CONFIG_PGA_2_048V,
-    GAIN_FOUR = ADS1015_REG_CONFIG_PGA_1_024V,
-    GAIN_EIGHT = ADS1015_REG_CONFIG_PGA_0_512V,
-    GAIN_SIXTEEN = ADS1015_REG_CONFIG_PGA_0_256V
-} adsGain_t;
+
 class ADS1015 
 {
 
@@ -114,7 +112,7 @@ class ADS1015
         uint8_t m_i2cAddress;      ///< the I2C address
         uint8_t m_conversionDelay; ///< conversion deay
         uint8_t m_bitShift;        ///< bit shift amount
-        adsGain_t m_gain;          ///< ADC gain
+        uint16_t m_gain;          ///< ADC gain
 
     public:
         ADS1015(uint8_t i2cAddress = ADS1015_ADDRESS);
@@ -123,8 +121,8 @@ class ADS1015
         int16_t readADC_Differential_2_3(void);
         void startComparator_SingleEnded(uint8_t channel, int16_t threshold);
         int16_t getLastConversionResults(void);
-        void setGain(adsGain_t gain);
-        adsGain_t getGain(void);
+        void setGain(uint16_t gain);
+        uint16_t getGain(void);
 };
 
 #endif

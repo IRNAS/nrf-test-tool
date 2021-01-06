@@ -117,8 +117,8 @@ uint8_t read_reg(uint8_t address, uint8_t reg)
 void write_word(uint8_t address, uint8_t reg, uint16_t val)
 {
     uint8_t buf[3] = {reg, val >> 8, val & 0xff};
-    printk("High byte of config register %d \n", buf[1]);
-    printk("Low byte of config register %d \n", buf[2]);
+    //printk("High byte of config register %d \n", buf[1]);
+    //printk("Low byte of config register %d \n", buf[2]);
     if (i2c_write(i2c_dev, buf, 3, address) != 0)
     {
         LOG_ERR("Error on i2c_write()");
@@ -148,8 +148,8 @@ uint16_t read_word(uint8_t address, uint8_t reg)
     {
         //LOG_DBG("i2c_read: no error\r");
     }
-    printk("Read high byte %d \n", read_data[0]);
-    printk("Read low byte %d \n", read_data[1]);
+    //printk("Read high byte %d \n", read_data[0]);
+    //printk("Read low byte %d \n", read_data[1]);
     return read_data[0] << 8 | read_data[1];
 }
 

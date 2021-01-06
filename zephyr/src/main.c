@@ -148,7 +148,11 @@ static int cmd_adc(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	shell_print(shell, "Received command: adc channel %d.", channel);
-	// TODO return adc value from desired channel or ERR
+	uint8_t target = (uint8_t)(channel/4);
+	channel = channel % 4;
+	uint16_t value = adc_read_voltage(target, channel);
+
+	shell_print(shell, "Read analog value (mV): %d", value);
 	shell_print(shell, "OK");
 	return 0;
 }

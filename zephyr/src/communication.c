@@ -142,13 +142,12 @@ void test_adc_chip(void)
     LOG_INF("ADC TEST TARGET 1 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[1][0], readings[1][1], readings[1][2], readings[1][3]);
     LOG_INF("ADC TEST TARGET 2 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[2][0], readings[2][1], readings[2][2], readings[2][3]);
     LOG_INF("ADC TEST TARGET 3 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[3][0], readings[3][1], readings[3][2], readings[3][3]);
-    
-    // uint16_t readings[4];
-    // for (uint8_t channel = 0; channel < 4; channel++) 
-    // {
-    //     readings[channel] = ads_read_ADC_single_ended(0, channel);
-    // }
-    // LOG_INF("ADC TEST TARGET 0 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[0], readings[1], readings[2], readings[3]);
+}
+
+uint16_t adc_read_voltage(uint8_t target, uint8_t channel)
+{
+    uint16_t digital_value = ads_read_ADC_single_ended(target, channel);
+    return ads_convert_to_analog(target, digital_value);
 }
 
 void test_max_chip(void)  

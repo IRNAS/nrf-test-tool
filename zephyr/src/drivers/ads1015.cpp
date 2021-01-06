@@ -44,7 +44,7 @@ ADS1015::ADS1015(uint8_t i2cAddress) {
     @param gain gain setting to use
 */
 /**************************************************************************/
-void ADS1015::setGain(adsGain_t gain) { m_gain = gain; }
+void ADS1015::setGain(uint16_t gain) { m_gain = gain; }
 
 /**************************************************************************/
 /*!
@@ -52,7 +52,7 @@ void ADS1015::setGain(adsGain_t gain) { m_gain = gain; }
     @return the gain setting
 */
 /**************************************************************************/
-adsGain_t ADS1015::getGain() { return m_gain; }
+uint16_t ADS1015::getGain() { return m_gain; }
 
 /**************************************************************************/
 /*!
@@ -100,7 +100,7 @@ uint16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
     // Set 'start single-conversion' bit
     config |= ADS1015_REG_CONFIG_OS_SINGLE;
 
-    printk("Set config register %d \n", config);
+    //printk("Set config register %d \n", config);
 
     // Write config register to the ADC
     //writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
@@ -119,7 +119,7 @@ uint16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
     // Shift 12-bit results right 4 bits for the ADS1015
     //return readRegister(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
     uint16_t result = read_word(m_i2cAddress, ADS1015_REG_POINTER_CONVERT);
-    printk("Conversion result %d \n", result);
+    //printk("Conversion result %d \n", result);
     return result >> m_bitShift;
 }
 
