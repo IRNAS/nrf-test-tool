@@ -68,7 +68,7 @@ uint16_t ads_convert_to_analog(uint8_t target, uint16_t digital_value)
             gain_voltage = 2048;
             break;
         case(0x0600):  //+-1.0248V
-            gain_voltage = 10248;
+            gain_voltage = 1025;
             break;
         case(0x0800):  //+-0.512V
             gain_voltage = 512;

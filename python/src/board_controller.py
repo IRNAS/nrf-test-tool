@@ -97,15 +97,14 @@ class BoardController():
             return False
 
         self.ser.write(f"adc {channel}")
-
-        read_line = self.ser.read_until_starts_with("(mV): ")
+        read_line = self.ser.read_until_starts_with("Read analog value")
         voltage = read_line.split(": ")[1]
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         if ret == "OK":
-            logging.info(f"Successfully read from serial: {ret}")
+            logging.info(f"Successfully read adc value from serial: {ret}")
             return voltage
         if ret == "ERROR":
-            logging.error(f"Failed to read from serial for cmd: {ret}")
+            logging.error(f"Failed to read adc value from serial: {ret}")
             return False
 
     def control_led(self, channel, state):
