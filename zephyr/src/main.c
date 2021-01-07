@@ -17,6 +17,7 @@
 
 LOG_MODULE_REGISTER(app);
 
+// EXAMPLE SUBCOMMAND
 static int cmd_demo_ping(const struct shell *shell, size_t argc, char **argv)
 {
 	ARG_UNUSED(argc);
@@ -65,8 +66,34 @@ SHELL_STATIC_SUBCMD_SET_CREATE(sub_demo,
 	SHELL_SUBCMD_SET_END /* Array terminated. */
 );
 SHELL_CMD_REGISTER(demo, &sub_demo, "Demo commands", NULL);
+// END OF EXAMPLE
 
-SHELL_CMD_ARG_REGISTER(version, NULL, "Show kernel version", cmd_version, 1, 0);
+static int cmd_test_tca(const struct shell *shell, size_t argc, char **argv)
+{
+	test_tca_chip();
+	return 0;
+}
+
+static int cmd_test_max(const struct shell *shell, size_t argc, char **argv)
+{
+	test_max_chip();
+	return 0;
+}
+
+static int cmd_test_ads(const struct shell *shell, size_t argc, char **argv)
+{
+	test_ads_chip();
+	return 0;
+}
+
+SHELL_STATIC_SUBCMD_SET_CREATE(sub_test,
+	SHELL_CMD(tca, NULL, "Test TCA6424.", cmd_test_tca),
+	SHELL_CMD(max, NULL, "Test MAX14661.", cmd_test_max),
+	SHELL_CMD(ads, NULL, "Test ADS1015.", cmd_test_ads),
+	SHELL_SUBCMD_SET_END /* Array terminated. */
+);
+/* Creating root (level 0) command "test" */
+SHELL_CMD_REGISTER(test, &sub_test, "Test commands:", NULL);
 
 // DOCS: http://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/reference/shell/index.html?highlight=shell_cmd_arg_register
 
@@ -187,27 +214,6 @@ static int i2c_scan(const struct shell *shell, size_t argc, char **argv)
 	return 0;
 }
 SHELL_CMD_REGISTER(scan, NULL, "testing i2c (init and scan)", i2c_scan);
-
-static int test_tca(const struct shell *shell, size_t argc, char **argv)
-{
-	test_tca_chip();
-	return 0;
-}
-SHELL_CMD_REGISTER(tca, NULL, "testing tca", test_tca);
-
-static int test_max(const struct shell *shell, size_t argc, char **argv)
-{
-	test_max_chip();
-	return 0;
-}
-SHELL_CMD_REGISTER(max, NULL, "testing max", test_max);
-
-static int test_adc(const struct shell *shell, size_t argc, char **argv)
-{
-	test_adc_chip();
-	return 0;
-}
-SHELL_CMD_REGISTER(adc_test, NULL, "testing adc", test_adc);
 
 /* INTERRUPTS */	// TODO
 void button_1_interrupt_handler(struct device *dev, struct gpio_callback *cb, u32_t pin)
