@@ -74,14 +74,16 @@ void i2c_scan(void)
  * @param val
  *
  */
-void write_reg(uint8_t address, uint8_t reg, uint8_t val)
+int8_t write_reg(uint8_t address, uint8_t reg, uint8_t val)
 {
     if (i2c_reg_write_byte(i2c_dev, address, reg, val) != 0)
     {
         LOG_ERR("Error on i2c_write()");
+        return -1;
     }
     else
     {
+        return 0;
         //LOG_DBG("i2c_write: no error");
     }
 }
@@ -93,18 +95,19 @@ void write_reg(uint8_t address, uint8_t reg, uint8_t val)
  *
  * @return content of reg
  */
-uint8_t read_reg(uint8_t address, uint8_t reg)
+int8_t read_reg(uint8_t address, uint8_t reg)
 {
     uint8_t read_data;
     if (i2c_reg_read_byte(i2c_dev, address, reg, &read_data) != 0)
     {
         LOG_ERR("Error on i2c_read()");
+        return -1;
     }
     else
     {
+        return read_data;
         //LOG_DBG("i2c_read: no error\r");
     }
-    return read_data;
 }
 
 /*
@@ -114,7 +117,7 @@ uint8_t read_reg(uint8_t address, uint8_t reg)
  * @param val
  *
  */
-void write_word(uint8_t address, uint8_t reg, uint16_t val)
+int8_t write_word(uint8_t address, uint8_t reg, uint16_t val)
 {
     uint8_t buf[3] = {reg, val >> 8, val & 0xff};
     //printk("High byte of config register %d \n", buf[1]);
@@ -122,10 +125,11 @@ void write_word(uint8_t address, uint8_t reg, uint16_t val)
     if (i2c_write(i2c_dev, buf, 3, address) != 0)
     {
         LOG_ERR("Error on i2c_write()");
+        return -1;
     }
     else
     {
-        //LOG_DBG("i2c_write: no error");
+        return 0;
     }
 }
 
@@ -137,27 +141,32 @@ void write_word(uint8_t address, uint8_t reg, uint16_t val)
  * @return content of reg
  */
 
-uint16_t read_word(uint8_t address, uint8_t reg)
+int16_t read_word(uint8_t address, uint8_t reg)
 {
     uint8_t read_data[2];
     if (i2c_burst_read(i2c_dev, address, reg, read_data, 2) != 0)
     {
         LOG_ERR("Error on i2c_read()");
+        return -1;  // TODO 1 is a bad return value, since register can hold 1 as well
     }
     else
     {
-        //LOG_DBG("i2c_read: no error\r");
+        return read_data[0] << 8 | read_data[1];
     }
     //printk("Read high byte %d \n", read_data[0]);
     //printk("Read low byte %d \n", read_data[1]);
-    return read_data[0] << 8 | read_data[1];
 }
 
-void write_empty(uint8_t address, uint8_t reg) 
+int8_t write_empty(uint8_t address, uint8_t reg) 
 {
     uint8_t temp = 0;
     if (i2c_write(i2c_dev, &temp, 0, address) != 0)
     {
         LOG_ERR("Error on i2c_write()");
+        return -1;
+    }
+    else 
+    {
+        return 0;
     }
 }

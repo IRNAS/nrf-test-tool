@@ -61,7 +61,7 @@ uint16_t ADS1015::getGain() { return m_gain; }
     @return the ADC reading
 */
 /**************************************************************************/
-uint16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
+int16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
     if (channel > 3) 
     {
         return 0;
@@ -104,7 +104,11 @@ uint16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
 
     // Write config register to the ADC
     //writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
-    write_word(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    int8_t ret = write_word(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    if (ret == -1)
+    {
+        return -1;
+    }
 
     // Wait for the conversion to complete
     //delay(m_conversionDelay);
@@ -118,9 +122,13 @@ uint16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
     // Read the conversion results
     // Shift 12-bit results right 4 bits for the ADS1015
     //return readRegister(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
-    uint16_t result = read_word(m_i2cAddress, ADS1015_REG_POINTER_CONVERT);
+    int16_t result = read_word(m_i2cAddress, ADS1015_REG_POINTER_CONVERT);
+    if (result == -1)
+    {
+        return -1;
+    }
     //printk("Conversion result %d \n", result);
-    return result >> m_bitShift;
+    return (uint16_t)result >> m_bitShift;
 }
 
 /**************************************************************************/
@@ -153,7 +161,11 @@ int16_t ADS1015::readADC_Differential_0_1() {
 
     // Write config register to the ADC
     //writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
-    write_reg(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    int16_t ret = write_reg(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    if (ret == -1)
+    {
+        return -1;  // return error
+    }
 
     // Wait for the conversion to complete
     //delay(m_conversionDelay);
@@ -161,7 +173,7 @@ int16_t ADS1015::readADC_Differential_0_1() {
 
     // Read the conversion results
     //uint16_t res = readRegister(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
-    uint16_t res = read_reg(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
+    int8_t res = read_reg(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
     if (m_bitShift == 0) 
     {
         return (int16_t)res;
@@ -209,7 +221,11 @@ int16_t ADS1015::readADC_Differential_2_3() {
 
     // Write config register to the ADC
     //writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
-    write_reg(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    int8_t ret = write_word(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    if (ret == -1)
+    {
+        return -1;  // return error
+    }
 
     // Wait for the conversion to complete
     //delay(m_conversionDelay);
@@ -217,7 +233,12 @@ int16_t ADS1015::readADC_Differential_2_3() {
 
     // Read the conversion results
     //uint16_t res = readRegister(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
-    uint16_t res = read_reg(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
+    int16_t res = read_word(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
+    if (res == -1)
+    {
+        return -1;
+    }
+
     if (m_bitShift == 0) 
     {
         return (int16_t)res;
@@ -245,7 +266,7 @@ int16_t ADS1015::readADC_Differential_2_3() {
     @param threshold comparator threshold
 */
 /**************************************************************************/
-void ADS1015::startComparator_SingleEnded(uint8_t channel, int16_t threshold) {
+int8_t ADS1015::startComparator_SingleEnded(uint8_t channel, int16_t threshold) {
     // Start with default values
     uint16_t config =
         ADS1015_REG_CONFIG_CQUE_1CONV |   // Comparator enabled and asserts on 1
@@ -280,11 +301,24 @@ void ADS1015::startComparator_SingleEnded(uint8_t channel, int16_t threshold) {
     // Set the high threshold register
     // Shift 12-bit results left 4 bits for the ADS1015
     //writeRegister(m_i2cAddress, ADS1015_REG_POINTER_HITHRESH, threshold << m_bitShift);
-    write_reg(m_i2cAddress, ADS1015_REG_POINTER_HITHRESH, threshold << m_bitShift);
+    int8_t ret = write_reg(m_i2cAddress, ADS1015_REG_POINTER_HITHRESH, threshold << m_bitShift);
+    if (ret == -1)
+    {
+        return -1;  // return error
+    }
 
     // Write config register to the ADC
     //writeRegister(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
-    write_reg(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    ret = write_reg(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
+    if (ret == -1)
+    {
+        return -1;  // return error
+    }
+    else
+    {
+        return 0;  // return ok
+    }
+    
 }
 
 /**************************************************************************/
@@ -302,7 +336,7 @@ int16_t ADS1015::getLastConversionResults() {
 
     // Read the conversion results
     //uint16_t res = readRegister(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
-    uint16_t res = read_reg(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
+    int16_t res = read_word(m_i2cAddress, ADS1015_REG_POINTER_CONVERT) >> m_bitShift;
     if (m_bitShift == 0) 
     {
         return (int16_t)res;

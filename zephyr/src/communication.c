@@ -125,7 +125,7 @@ uint8_t gpio_reset(uint8_t channel)
     return 0;
 }
 
-void test_adc_chip(void)
+void test_ads_chip(void)
 {
     int16_t readings[4][4] = {{-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}};
 

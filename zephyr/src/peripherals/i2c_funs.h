@@ -12,13 +12,13 @@ extern "C"
 {
 #endif
 
-    void write_reg(uint8_t address, uint8_t reg, uint8_t val);
-    uint8_t read_reg(uint8_t address, uint8_t reg);
+    int8_t write_reg(uint8_t address, uint8_t reg, uint8_t val);
+    int8_t read_reg(uint8_t address, uint8_t reg);
 
-    void write_word(uint8_t address, uint8_t reg, uint16_t val);
-    uint16_t read_word(uint8_t address, uint8_t reg);
+    int8_t write_word(uint8_t address, uint8_t reg, uint16_t val);
+    int16_t read_word(uint8_t address, uint8_t reg);
 
-    void write_empty(uint8_t address, uint8_t reg);
+    int8_t write_empty(uint8_t address, uint8_t reg);
 
 #ifdef __cplusplus
 } // extern C
