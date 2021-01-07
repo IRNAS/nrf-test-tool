@@ -7,6 +7,7 @@
 #include <gpio.h>
 #include <tca_interface.hpp>
 #include <max_interface.hpp>
+#include <ads1015_interface.hpp>
 
 #define LED_CHANNELS_OFFSET     8
 
@@ -21,6 +22,9 @@ void initialize_peripherals(void)
 
     // init TCA chip
     tca_init();
+
+    // init ADC chips
+    ads_init();
 
     // init MAX chip
     configure_pin(PIN_JTAG_ROUTE_OUT, GPIO_OUTPUT);
@@ -119,6 +123,31 @@ uint8_t gpio_reset(uint8_t channel)
     k_sleep(K_MSEC(100));
     disable_pin(pin);
     return 0;
+}
+
+void test_adc_chip(void)
+{
+    int16_t readings[4][4] = {{-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}};
+
+    for (uint8_t target = 0; target < 4; target++) 
+    {
+        for (uint8_t channel = 0; channel < 4; channel++) 
+        {
+            readings[target][channel] = ads_read_ADC_single_ended(target, channel);
+        }
+    }
+
+
+    LOG_INF("ADC TEST TARGET 0 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[0][0], readings[0][1], readings[0][2], readings[0][3]);
+    LOG_INF("ADC TEST TARGET 1 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[1][0], readings[1][1], readings[1][2], readings[1][3]);
+    LOG_INF("ADC TEST TARGET 2 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[2][0], readings[2][1], readings[2][2], readings[2][3]);
+    LOG_INF("ADC TEST TARGET 3 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[3][0], readings[3][1], readings[3][2], readings[3][3]);
+}
+
+uint16_t adc_read_voltage(uint8_t target, uint8_t channel)
+{
+    uint16_t digital_value = ads_read_ADC_single_ended(target, channel);
+    return ads_convert_to_analog(target, digital_value);
 }
 
 void test_max_chip(void)  
