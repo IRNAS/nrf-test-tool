@@ -16,6 +16,6 @@ void test_ads_chip(void);
 int16_t adc_read_voltage(uint8_t target, uint8_t channel);
 
 void test_max_chip(void);
-uint8_t max_set_jtag(int8_t channel);
+int8_t max_set_jtag(int8_t channel);
 
 #endif  // _COMMUNICATION_H_

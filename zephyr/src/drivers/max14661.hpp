@@ -102,49 +102,49 @@ class MAX14661
         };
 
         /* Clears all bits to opens all 32 switches */
-        void clearAll();
+        int8_t clearAll();
 
         /** Set A switches simultaneously
          *
          * @param swA0 the desired state of switches [A09 - A01]
          * @param swA1 the desired state of switches [A16 - A10]
          */
-        void setA(uint8_t swA0, uint8_t swA1);
+        int8_t setA(uint8_t swA0, uint8_t swA1);
 
         /** Set B switches simultaneously
          *
          * @param swB0 the desired state of switches [B09 - B01]
          * @param swB1 the desired state of switches [B16 - B10]
          */
-        void setB(uint8_t swB0, uint8_t swB1);
+        int8_t setB(uint8_t swB0, uint8_t swB1);
 
         /** Read the status of all A08-A01 switches concatenated into a uint8_t
         *
         * @returns
         * the switch states [A08-A01]
         */
-        uint8_t readDir0();
+        int8_t readDir0();
 
         /** Read the status of all A16-A09 switches concatenated into a uint8_t
         *
         * @returns
         * the switch states [A16-A09]
         */
-        uint8_t readDir1();
+        int8_t readDir1();
 
         /** Read the status of all B08-B01 switches concatenated into a uint8_t
         *
         * @returns
         * the switch states [B08-B01]
         */
-        uint8_t readDir2();
+        int8_t readDir2();
 
         /** Read the status of all B16-B09 switches concatenated into a uint8_t
         *
         * @returns
         * the switch states [B16-B09]
         */
-        uint8_t readDir3();
+        int8_t readDir3();
 
     private:
         int _addr;

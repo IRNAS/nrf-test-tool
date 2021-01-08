@@ -143,8 +143,13 @@ static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 	{
 		shell_print(shell, "Received command: jtag channel %d on.", channel);
 	}
-	int err = max_set_jtag(channel);	// TODO return OK or ERR
-	shell_print(shell, "OK");
+	int err = max_set_jtag(channel);
+	if (err == -1) {
+		shell_print(shell, "ERR");
+	}
+	else {
+		shell_print(shell, "OK");
+	}
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(jtag, NULL, "parameters: <channel num (0-7) or -1 (off)>", cmd_jtag, 2, 0);

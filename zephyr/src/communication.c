@@ -159,16 +159,20 @@ int16_t adc_read_voltage(uint8_t target, uint8_t channel)
 
 void test_max_chip(void)  
 {
-    uint8_t read_A0 = max_read_dir0();
-    uint8_t read_A1 = max_read_dir1();
-    uint8_t read_B0 = max_read_dir2();
-    uint8_t read_B1 = max_read_dir3();
+    int8_t read_A0 = max_read_dir0();
+    int8_t read_A1 = max_read_dir1();
+    int8_t read_B0 = max_read_dir2();
+    int8_t read_B1 = max_read_dir3();
     LOG_INF("MAX TEST read: A0: %d, A1: %d, B0: %d, B1: %d", read_A0, read_A1, read_B0, read_B1);
 }
 
-uint8_t max_set_jtag(int8_t channel) 
+int8_t max_set_jtag(int8_t channel) 
 {
-    max_clear_all();
+    int8_t ret = max_clear_all();
+    if (ret == -1) 
+    {
+        return -1;
+    }
     if (channel == -1)
 	{
         disable_pin(PIN_JTAG_ROUTE_OUT);
@@ -180,8 +184,16 @@ uint8_t max_set_jtag(int8_t channel)
         uint8_t line = channel * 2;
         uint16_t swdclk_line = 1 << line;
         uint16_t swdio_line = 1 << (line + 1);
-        max_set_A_switches(swdclk_line);
-        max_set_B_switches(swdio_line);
+        ret = max_set_A_switches(swdclk_line);
+        if (ret == -1) 
+        {
+            return -1;
+        }
+        ret = max_set_B_switches(swdio_line);
+        if (ret == -1) 
+        {
+            return -1;
+        }
         LOG_INF("MAX on CLK: %d, IO: %d", swdclk_line, swdio_line);
     }
     return 0;
