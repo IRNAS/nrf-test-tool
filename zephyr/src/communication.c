@@ -144,10 +144,17 @@ void test_ads_chip(void)
     LOG_INF("ADC TEST TARGET 3 read: A0: %d, A1: %d, A2: %d, A3: %d", readings[3][0], readings[3][1], readings[3][2], readings[3][3]);
 }
 
-uint16_t adc_read_voltage(uint8_t target, uint8_t channel)
+int16_t adc_read_voltage(uint8_t target, uint8_t channel)
 {
-    uint16_t digital_value = ads_read_ADC_single_ended(target, channel);
-    return ads_convert_to_analog(target, digital_value);
+    int16_t digital_value = ads_read_ADC_single_ended(target, channel);
+    if (digital_value == -1)
+    {
+        return -1;
+    }
+    else 
+    {
+        return (uint16_t)ads_convert_to_analog(target, digital_value);
+    }
 }
 
 void test_max_chip(void)  

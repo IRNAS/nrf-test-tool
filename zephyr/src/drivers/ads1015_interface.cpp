@@ -27,9 +27,10 @@ uint16_t ads_get_gain(uint8_t target)
     return m_ADS1015[target].getGain();
 }
 
-uint16_t ads_read_ADC_single_ended(uint8_t target, uint8_t channel)
+int16_t ads_read_ADC_single_ended(uint8_t target, uint8_t channel)
 {
-    return m_ADS1015[target].readADC_SingleEnded(channel);
+    int16_t digital_value = m_ADS1015[target].readADC_SingleEnded(channel);
+    return digital_value;
 }
 
 int16_t ads_read_ADC_differential_0_1(uint8_t target)
@@ -42,9 +43,9 @@ int16_t ads_read_ADC_differential_2_3(uint8_t target)
     return m_ADS1015[target].readADC_Differential_2_3();
 }
 
-void ads_start_comparator_single_ended(uint8_t target, uint8_t channel, int16_t threshold)
+int8_t ads_start_comparator_single_ended(uint8_t target, uint8_t channel, int16_t threshold)
 {
-    m_ADS1015[target].startComparator_SingleEnded(channel, threshold);
+    return m_ADS1015[target].startComparator_SingleEnded(channel, threshold);
 }
 
 int16_t ads_get_last_conversion_result(uint8_t target)
@@ -52,8 +53,12 @@ int16_t ads_get_last_conversion_result(uint8_t target)
     return m_ADS1015[target].getLastConversionResults();
 }
 
-uint16_t ads_convert_to_analog(uint8_t target, uint16_t digital_value)
+int16_t ads_convert_to_analog(uint8_t target, int16_t digital_value)
 {
+    if (digital_value == -1) 
+    {
+        return -1;
+    }
     uint16_t gain = m_ADS1015[target].getGain();
     uint16_t gain_voltage = 0.0;
     switch (gain)

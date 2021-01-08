@@ -177,10 +177,16 @@ static int cmd_adc(const struct shell *shell, size_t argc, char **argv)
 	shell_print(shell, "Received command: adc channel %d.", channel);
 	uint8_t target = (uint8_t)(channel/4);
 	channel = channel % 4;
-	uint16_t value = adc_read_voltage(target, channel);
-
+	int16_t value = adc_read_voltage(target, channel);
 	shell_print(shell, "Read analog value (mV): %d", value);
-	shell_print(shell, "OK");
+	if (value == -1) 
+	{
+		shell_print(shell, "ERR");
+	}
+	else 
+	{
+		shell_print(shell, "OK");
+	}
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(adc, NULL, "parameters: <adc channel num (0-15)>", cmd_adc, 2, 0);

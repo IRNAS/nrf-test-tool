@@ -107,6 +107,7 @@ int16_t ADS1015::readADC_SingleEnded(uint8_t channel) {
     int8_t ret = write_word(m_i2cAddress, ADS1015_REG_POINTER_CONFIG, config);
     if (ret == -1)
     {
+        //printk("Error when writing config register to ads %i", ret);
         return -1;
     }
 
