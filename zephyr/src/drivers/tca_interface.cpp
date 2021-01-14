@@ -8,40 +8,66 @@
 // tca driver class instance
 TCA6424A m_tca6424 = TCA6424A(0x22);
 
-void tca_init(void) 
+int8_t tca_init(void) 
 {
     // make all channels output
-    m_tca6424.setBankDirection(0,0);
-    m_tca6424.setBankDirection(1,0);
-    m_tca6424.setBankDirection(2,0);
+    uint8_t ret = m_tca6424.setBankDirection(0,0);
+    if (ret == -1)
+    {
+        return -1;
+    }
+    ret = m_tca6424.setBankDirection(1,0);
+    if (ret == -1)
+    {
+        return -1;
+    }
+    ret = m_tca6424.setBankDirection(2,0);
+    if (ret == -1)
+    {
+        return -1;
+    }
 
     // set all channels to 0
-    write_bank(0,0);
-    write_bank(1,0);
-    write_bank(2,0);
+    ret = write_bank(0,0);
+    if (ret == -1)
+    {
+        return -1;
+    }
+    ret = write_bank(1,0);
+    if (ret == -1)
+    {
+        return -1;
+    }
+    ret = write_bank(2,0);
+    if (ret == -1)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
-uint8_t test_connection(void) 
+int8_t test_connection(void) 
 {
     return m_tca6424.testConnection();
 }
 
-void write_pin(uint16_t pin, uint8_t value)
+int8_t write_pin(uint16_t pin, uint8_t value)
 {
-    m_tca6424.writePin(pin, value);
+    return m_tca6424.writePin(pin, value);
 }
 
-void write_bank(uint8_t bank, uint8_t value) 
+int8_t write_bank(uint8_t bank, uint8_t value) 
 {
-    m_tca6424.writeBank(bank, value);
+    return m_tca6424.writeBank(bank, value);
 }
 
-uint8_t read_pin(uint16_t pin) 
+int8_t read_pin(uint16_t pin) 
 {
     return m_tca6424.readPin(pin);
 }
 
-uint8_t read_bank(uint8_t bank) 
+int8_t read_bank(uint8_t bank) 
 {
     return m_tca6424.readBank(bank);
 }

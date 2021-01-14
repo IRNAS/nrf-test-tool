@@ -118,8 +118,16 @@ static int cmd_power(const struct shell *shell, size_t argc, char **argv)
 	}
 	char *state = argv[2];
 	shell_print(shell, "Received command: power state: %s for target: %d", state, target);
-	int err = tca_set_power(target, state);		// TODO return OK or ERR
-	shell_print(shell, "OK");
+	int err = tca_set_power(target, state);
+	if (err == -1) 
+	{
+		shell_print(shell, "ERR");
+	}
+	else
+	{
+		shell_print(shell, "OK");
+	}
+	
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(power, NULL, "parameters: <target num (0-3)> <state (on, ppk or off)> \nERROR", cmd_power, 3, 0);
@@ -164,7 +172,7 @@ static int cmd_reset(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	shell_print(shell, "Received command: reset channel %d.", channel);
-	int err = gpio_reset(channel);		// TODO return OK or ERR
+	int err = gpio_reset(channel);
 	shell_print(shell, "OK");
 	return 0;
 }
@@ -213,7 +221,14 @@ static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 	char *state = argv[2];
 	shell_print(shell, "Received command: led state: %s for channel: %d", state, channel);
 	int err = tca_set_led(channel, state);		// TODO return OK or ERR
-	shell_print(shell, "OK");
+	if (err == -1) 
+	{
+		shell_print(shell, "ERR");
+	}
+	else
+	{
+		shell_print(shell, "OK");
+	}
 	return 0;
 }
 SHELL_CMD_ARG_REGISTER(led, NULL, "parameters: <channel num (0-7)> <state (on or off)>", cmd_led, 3, 0);

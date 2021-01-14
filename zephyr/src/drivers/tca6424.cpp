@@ -64,9 +64,9 @@ void TCA6424A::initialize() {
  * Make sure the device is connected and responds as expected.
  * @return True if connection is valid, false otherwise
  */
-uint8_t TCA6424A::testConnection() {
+int8_t TCA6424A::testConnection() {
     //return I2Cdev::readBytes(devAddr, TCA6424A_RA_INPUT0, 3, buffer) == 3;
-    uint8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0);
+    int8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0);
     return result;
 }
 
@@ -75,13 +75,17 @@ uint8_t TCA6424A::testConnection() {
 /** Get a single INPUT pin's logic level.
  * @return Pin logic level (0 or 1)
  */
-uint8_t TCA6424A::readPin(uint8_t pin) {
+int8_t TCA6424A::readPin(uint8_t pin) {
     //I2Cdev::readBit(devAddr, TCA6424A_RA_INPUT0 + (pin / 8), pin % 8, buffer);
     //return buffer[0];
 
     uint8_t bitNum = pin % 8;
-    uint8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0 + (pin / 8));
-    result = (result & (1 << bitNum)) >> bitNum;
+    int8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0 + (pin / 8));
+    if (result == -1)
+    {
+        return -1;
+    }
+    result = ((uint8_t)result & (1 << bitNum)) >> bitNum;
     return result;
 }
 
@@ -170,23 +174,37 @@ void TCA6424A::getAllOutputLevel(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2)
  * @param pin Which pin to write (0-23)
  * @param value New pin output logic level (0 or 1)
  */
-void TCA6424A::writePin(uint16_t pin, uint8_t value) {
+int8_t TCA6424A::writePin(uint16_t pin, uint8_t value) {
     //I2Cdev::writeBit(devAddr, TCA6424A_RA_OUTPUT0 + (pin / 8), pin % 8, value);
 
     uint8_t bitNum = pin % 8;
-    uint8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0 + (pin / 8));
-    result = (value != 0) ? (result | (1 << bitNum)) : (result & ~(1 << bitNum));
-    write_reg(devAddr, TCA6424A_RA_OUTPUT0 + (pin / 8), result);
+    int8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0 + (pin / 8));
+    if (result == -1)
+    {
+        return -1;
+    }
+    result = (value != 0) ? ((uint8_t)result | (1 << bitNum)) : ((uint8_t)result & ~(1 << bitNum));
+    int8_t ret = write_reg(devAddr, TCA6424A_RA_OUTPUT0 + (pin / 8), result);
+    if (ret == -1)
+    {
+        return -1;
+    }
+    return 0;
 }
 
 /** Set all OUTPUT pins' logic levels in one bank.
  * @param bank Which bank to write (0/1/2 for P0*, P1*, P2* respectively)
  * @param value New pins' output logic level (0 or 1 for each pin)
  */
-void TCA6424A::writeBank(uint8_t bank, uint8_t value) {
+int8_t TCA6424A::writeBank(uint8_t bank, uint8_t value) {
     //I2Cdev::writeByte(devAddr, TCA6424A_RA_OUTPUT0 + bank, value);
 
-    write_reg(devAddr, TCA6424A_RA_OUTPUT0 + bank, value);
+    int8_t ret = write_reg(devAddr, TCA6424A_RA_OUTPUT0 + bank, value);
+    if (ret == -1)
+    {
+        return -1;
+    }
+    return 0;
 }
 
 /** Set all OUTPUT pins' logic levels in all banks.
@@ -339,10 +357,10 @@ void TCA6424A::setPinDirection(uint16_t pin, bool direction) {
  * @param bank Which bank to read (0/1/2 for P0*, P1*, P2* respectively)
  * @param direction New pins' direction settings (0 or 1 for each pin)
  */
-void TCA6424A::setBankDirection(uint8_t bank, uint8_t direction) {
+int8_t TCA6424A::setBankDirection(uint8_t bank, uint8_t direction) {
     //I2Cdev::writeByte(devAddr, TCA6424A_RA_CONFIG0 + bank, direction);
 
-    write_reg(devAddr, TCA6424A_RA_CONFIG0 + bank, direction);
+    return write_reg(devAddr, TCA6424A_RA_CONFIG0 + bank, direction);
 }
 
 /** Set all pin direction (I/O) settings in all banks.

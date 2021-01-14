@@ -30,6 +30,7 @@ void configure_pin(uint8_t pin, uint32_t direction);
 void enable_pin(uint8_t pin);
 void disable_pin(uint8_t pin);
 void reset_pin(uint8_t pin);
+int get_pin(uint8_t pin);
 
 void configure_all_reset_pins(void);
 

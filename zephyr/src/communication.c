@@ -53,7 +53,7 @@ void test_tca_chip(void)
     }
 }
 
-uint8_t tca_set_power(uint8_t target, char *state)
+int8_t tca_set_power(uint8_t target, char *state)
 {
     int res;
     uint8_t pin = target * 2;   // each target has two pins
@@ -77,22 +77,46 @@ uint8_t tca_set_power(uint8_t target, char *state)
     }
 
     res = read_pin(pin);
+    if (res == -1)
+    {
+        return -1;
+    }
     LOG_DBG("pin %d OLD state: %d", pin, res);
-    write_pin(pin, new_pin_state_pro);
+    res = write_pin(pin, new_pin_state_pro);
+    if (res == -1)
+    {
+        return -1;
+    }
     res = read_pin(pin);
+    if (res == -1)
+    {
+        return -1;
+    }
     LOG_DBG("pin %d NEW state: %d", pin, res);
 
     pin++;
     res = read_pin(pin);
+    if (res == -1)
+    {
+        return -1;
+    }
     LOG_DBG("pin %d OLD state: %d", pin, res);
-    write_pin(pin, new_pin_state_ldo);
+    res = write_pin(pin, new_pin_state_ldo);
+    if (res == -1)
+    {
+        return -1;
+    }
     res = read_pin(pin);
+    if (res == -1)
+    {
+        return -1;
+    }
     LOG_DBG("pin %d NEW state: %d", pin, res);
 
     return 0;
 }
 
-uint8_t tca_set_led(uint8_t channel, char *state)
+int8_t tca_set_led(uint8_t channel, char *state)
 {
     int res;
     uint8_t pin = channel + LED_CHANNELS_OFFSET;
@@ -108,9 +132,21 @@ uint8_t tca_set_led(uint8_t channel, char *state)
     }
 
     res = read_pin(pin);
+    if (res == -1)
+    {
+        return -1;
+    }
     LOG_DBG("pin %d OLD state: %d", pin, res);
-    write_pin(pin, new_pin_state);
+    res = write_pin(pin, new_pin_state);
+    if (res == -1)
+    {
+        return -1;
+    }
     res = read_pin(pin);
+    if (res == -1)
+    {
+        return -1;
+    }
     LOG_DBG("pin %d NEW state: %d", pin, res);
     
     return 0;

@@ -48,6 +48,11 @@ void disable_pin(uint8_t pin)
     gpio_pin_set(gpio_dev, pin, 0);
 }
 
+int get_pin(uint8_t pin)
+{
+    return gpio_pin_get(gpio_dev, pin);
+}
+
 // trigger reset on pin
 // void reset_pin(uint8_t pin) 
 // {

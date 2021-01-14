@@ -94,10 +94,10 @@ class TCA6424A {
         TCA6424A(uint8_t address);
         
         void initialize();
-        uint8_t testConnection();
+        int8_t testConnection();
         
         // INPUT* registers (x0h - x2h)
-        uint8_t readPin(uint8_t pin);
+        int8_t readPin(uint8_t pin);
         uint8_t readBank(uint8_t bank);
         void readAll(uint8_t *banks);
         void readAll(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2);
@@ -107,8 +107,8 @@ class TCA6424A {
         uint8_t getBankOutputLevel(uint8_t bank);
         void getAllOutputLevel(uint8_t *banks);
         void getAllOutputLevel(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2);
-        void writePin(uint16_t pin, uint8_t value);
-        void writeBank(uint8_t bank, uint8_t value);
+        int8_t writePin(uint16_t pin, uint8_t value);
+        int8_t writeBank(uint8_t bank, uint8_t value);
         void writeAll(uint8_t *banks);
         void writeAll(uint8_t bank0, uint8_t bank1, uint8_t bank2);
 
@@ -128,7 +128,7 @@ class TCA6424A {
         void getAllDirection(uint8_t *banks);
         void getAllDirection(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2);
         void setPinDirection(uint16_t pin, bool direction);
-        void setBankDirection(uint8_t bank, uint8_t direction);
+        int8_t setBankDirection(uint8_t bank, uint8_t direction);
         void setAllDirection(uint8_t *banks);
         void setAllDirection(uint8_t bank0, uint8_t bank1, uint8_t bank2);
 
