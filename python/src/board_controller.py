@@ -107,6 +107,23 @@ class BoardController():
             logging.error(f"Failed to read adc value from serial: {ret}")
             return False
 
+    def detect_device(self, target):
+        """Detect device on channel 0-3"""
+        if type(target) != int or target < 0 or target > 3:
+            logging.warning(f"Invalid target: {target}. Valid targets: 0-3!")
+            return False
+
+        self.ser.write(f"detect {target}")
+        read_line = self.ser.read_until_starts_with("Detected board")
+        board_detected = read_line.split(": ")[1]
+        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        if ret == "OK":
+            logging.info(f"Successfully read device present from serial: {ret}. ")
+            return board_detected
+        if ret == "ERROR":
+            logging.error(f"Failed to read from serial for cmd: {ret}")
+            return False
+
     def control_led(self, channel, state):
         """Control led on channel 0-7, state = on/off"""
         if type(channel) != int or channel < 0 or channel > 7:
