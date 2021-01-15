@@ -10,15 +10,18 @@ TCA6424A m_tca6424 = TCA6424A(0x22);
 
 void tca_init(void) 
 {
-    // make all channels output
+    // make banks 0 and 1 output
     m_tca6424.setBankDirection(0,0);
     m_tca6424.setBankDirection(1,0);
-    m_tca6424.setBankDirection(2,0);
+
+    // make bank 2 input
+    m_tca6424.setBankDirection(2,1);
 
     // set all channels to 0
     write_bank(0,0);
     write_bank(1,0);
-    write_bank(2,0);
+
+    //write_bank(2,1);
 }
 
 uint8_t test_connection(void) 

@@ -10,6 +10,7 @@
 #include <ads1015_interface.hpp>
 
 #define LED_CHANNELS_OFFSET     8
+#define DEVICE_CHANNELS_OFFSET 16
 
 LOG_MODULE_REGISTER(communication);
 
@@ -41,13 +42,13 @@ void test_tca_chip(void)
     uint8_t result = test_connection();
     LOG_INF("Connection test result: %x", result);
 
-    for (int i = 0; i < 15; i++) 
+    for (int i = 0; i < 24; i++)  // read all 24 pins
     {
-        if (i == 3 || i == 7 || i == 11) 
-        {
-            continue;
-        }
-        int res = read_bank(i);
+        // if (i == 3 || i == 7 || i == 11) 
+        // {
+        //     continue;
+        // }
+        int res = read_pin(i);
         LOG_INF("%d result: %x", i, res);
         k_sleep(K_MSEC(10));
     }
@@ -114,6 +115,17 @@ uint8_t tca_set_led(uint8_t channel, char *state)
     LOG_DBG("pin %d NEW state: %d", pin, res);
     
     return 0;
+}
+
+uint8_t tca_detect_device(uint8_t channel)
+{
+    int res;
+    uint8_t pin = channel + DEVICE_CHANNELS_OFFSET;
+
+    res = read_pin(pin);
+    LOG_DBG("read pin %d state: %d", pin, res);
+
+    return res;
 }
 
 uint8_t gpio_reset(uint8_t channel)  
