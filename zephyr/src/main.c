@@ -191,7 +191,7 @@ static int cmd_detect(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	shell_print(shell, "Received command: detect devices on target: %d", target);
-	uint8_t channel = target * 2;  // detect board if present
+	uint8_t channel = (3 - target) * 2;  // detect board if present - pins are reversed so its 3-target
 	int err = tca_detect_device(channel);		// TODO return OK or ERR
 	int ret;
 	if (err == 0)
