@@ -40,7 +40,7 @@ class BoardController():
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         self.lock.release()  # release lock
         if ret == "OK":
-            logging.info(f"Successfully read from serial for cmd set_power: {ret}")
+            logging.info(f"Successfully set power: {ret}")
             return True
         if ret == "ERROR":
             logging.error(f"Failed to read from serial for cmd set_power: {ret}")
@@ -58,7 +58,7 @@ class BoardController():
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         self.lock.release()  # release lock
         if ret == "OK":
-            logging.info(f"Successfully read from serial for cmd: {ret}")
+            logging.info(f"Successfully set jtag: {ret}")
             return True
         if ret == "ERROR":
             logging.error(f"Failed to read from serial for cmd: {ret}")
@@ -91,15 +91,36 @@ class BoardController():
             return False
 
         self.ser.write(f"reset {channel}")
-
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        self.lock.release()  # release lock
         if ret == "OK":
             logging.info(f"Successfully read from serial for cmd: {ret}")
             return True
         if ret == "ERROR":
             logging.error(f"Failed to read from serial for cmd: {ret}")
             return False
+
+    def reset_target(self, target):
+        """Reset target"""
+        self.lock.acquire()  # acquire lock
+        if type(target) != int or target < 0 or target > 3:
+            logging.warning(f"Invalid channel: {target}. Valid targets: 0-3.")
+            return False
+
+        channel = target * 2
+        self.ser.write(f"reset {channel}")
+        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        time.sleep(0.05)
+        channel += 1
+        self.ser.write(f"reset {channel}")
+        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         self.lock.release()  # release lock
+        if ret == "OK":
+            logging.info(f"Successfully read from serial for cmd: {ret}")
+            return True
+        if ret == "ERROR":
+            logging.error(f"Failed to read from serial for cmd: {ret}")
+            return False
 
     def read_adc(self, channel):
         """Read adc on channel 0-15"""
@@ -122,22 +143,27 @@ class BoardController():
 
     def detect_device(self, target):
         """Detect device on channel 0-3"""
-        self.lock.acquire()  # acquire lock
-        if type(target) != int or target < 0 or target > 3:
-            logging.warning(f"Invalid target: {target}. Valid targets: 0-3!")
-            return False
+        try:
+            self.lock.acquire()  # acquire lock
+            if type(target) != int or target < 0 or target > 3:
+                logging.warning(f"Invalid target: {target}. Valid targets: 0-3!")
+                return False
 
-        self.ser.write(f"detect {target}")
-        read_line = self.ser.read_until_starts_with("Detected board")
-        board_detected = read_line.split(": ")[1]
-        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
-        self.lock.release()  # release lock
-        if ret == "OK":
-            logging.info(f"Successfully read device present from serial: {ret}. ")
-            return board_detected
-        if ret == "ERROR":
-            logging.error(f"Failed to read from serial for cmd: {ret}")
-            return False
+            self.ser.write(f"detect {target}")
+            time.sleep(0.05)
+            read_line = self.ser.read_until_starts_with("Detected board")
+            board_detected = read_line.split(": ")[1]
+            ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+            self.lock.release()  # release lock
+            if ret == "OK":
+                #logging.info(f"Successfully read device present from serial: {ret}. ")
+                return board_detected
+            if ret == "ERROR":
+                logging.error(f"Failed to read from serial for cmd: {ret}")
+                return False
+        except Exception as e:
+            self.lock.release()
+            return None
 
     def control_led(self, channel, state):
         """Control led on channel 0-7, state = on/off"""
