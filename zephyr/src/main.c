@@ -161,24 +161,42 @@ SHELL_CMD_ARG_REGISTER(adc, NULL, "parameters: <adc channel num (0-15)>", cmd_ad
 static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;
-	int channel = strtol(argv[1], &after_num, 10);
-	if (channel < 0 || channel > MAX_CHANNEL_NUM) 
+	int target = strtol(argv[1], &after_num, 10);
+	if (target < 0 || target > MAX_TARGET_NUM) 
 	{
-		shell_print(shell, "ERROR: wrong parameter <channel>");
+		shell_print(shell, "ERROR: wrong parameter <target>");
 		return -1;
 	}
-	if (strcmp("off", argv[2]) != 0 && strcmp("on", argv[2]) != 0) 
+	if (strcmp("off", argv[2]) != 0 && strcmp("on", argv[2]) != 0 && strcmp("blink", argv[2]) != 0) 
 	{
 		shell_print(shell, "wrong parameter <state> \nERROR");
 		return -1;
 	}
+	if (argc > 3) 
+	{
+		if (strcmp("green", argv[3]) != 0 && strcmp("red", argv[3]) != 0 && strcmp("orange", argv[3]) != 0) 
+		{
+			shell_print(shell, "wrong parameter <color> \nERROR");
+			return -1;
+		}
+	}
+	
 	char *state = argv[2];
-	shell_print(shell, "Received command: led state: %s for channel: %d", state, channel);
-	int err = tca_set_led(channel, state);		// TODO return OK or ERR
+	char *color;
+	if (argc > 3) 
+	{
+		color = argv[3];
+	}
+	else 
+	{
+		color = NULL;
+	}
+	shell_print(shell, "Received command: led state: %s for target: %d", state, target);
+	int err = tca_set_led(target, state, color);		// TODO return OK or ERR
 	shell_print(shell, "OK");
 	return 0;
 }
-SHELL_CMD_ARG_REGISTER(led, NULL, "parameters: <channel num (0-7)> <state (on or off)>", cmd_led, 3, 0);
+SHELL_CMD_ARG_REGISTER(led, NULL, "parameters: <channel num (0-7)> <state (on, off, blink)> <color (red, green, orange)>", cmd_led, 3, 1);
 
 // read both device pins on target
 static int cmd_detect(const struct shell *shell, size_t argc, char **argv)
@@ -269,6 +287,8 @@ void main(void)
 { 
 	LOG_INF("Nrf test tool: Hello");
 	initialize_peripherals();
+
+	init_tca_blink_work();
 
 	// TODO
 	// enable_pin(PIN_NRF52_RESET_T0);

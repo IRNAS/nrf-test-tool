@@ -14,6 +14,8 @@
 
 LOG_MODULE_REGISTER(communication);
 
+static int color[4] = {-1};
+
 void initialize_peripherals(void) 
 {
     // init gpio and i2c
@@ -93,26 +95,235 @@ uint8_t tca_set_power(uint8_t target, char *state)
     return 0;
 }
 
-uint8_t tca_set_led(uint8_t channel, char *state)
+
+
+void toggle_led(uint8_t target, uint8_t new_pin_state)
 {
+    uint8_t pin;
+    uint8_t off_pin;
     int res;
-    uint8_t pin = channel + LED_CHANNELS_OFFSET;
+    // LOG_DBG("color %d on target %d", color[target], target);
+
+    if (color[target] == 1 || color[target] == 2) 
+    {
+        if (color[target] == 1)  // green
+        {
+            pin = target * 2 + 1 + LED_CHANNELS_OFFSET;
+            off_pin = pin - 1;
+        }
+        if (color[target] == 2)  // red
+        {
+            pin = target * 2 + LED_CHANNELS_OFFSET;
+            off_pin = pin + 1;
+        }
+        res = read_pin(pin);
+        // LOG_DBG("pin %d OLD state: %d", pin, res);
+        write_pin(pin, new_pin_state);
+        res = read_pin(pin);
+        // LOG_DBG("pin %d NEW state: %d", pin, res);
+        res = read_pin(pin);
+        // LOG_DBG("pin %d OLD state: %d", pin, res);
+        write_pin(off_pin, 0);
+        res = read_pin(pin);
+        // LOG_DBG("pin %d NEW state: %d", pin, res);
+    }
+    else if (color[target] == 3)
+    {
+        pin = target * 2 + LED_CHANNELS_OFFSET;
+        res = read_pin(pin);
+        // LOG_DBG("pin %d OLD state: %d", pin, res);
+        write_pin(pin, new_pin_state);
+        res = read_pin(pin);
+        // LOG_DBG("pin %d NEW state: %d", pin, res);
+        pin++;
+        res = read_pin(pin);
+        // LOG_DBG("pin %d OLD state: %d", pin, res);
+        write_pin(pin, new_pin_state);
+        res = read_pin(pin);
+        // LOG_DBG("pin %d NEW state: %d", pin, res);
+    }   
+}
+
+bool blinking[4] = {false};
+bool led_state[4] = {false};
+
+struct k_delayed_work work_toggle_led_0;
+
+void work_handler_toggle_led_0(struct k_work *work)
+{
+    // LOG_DBG("blinking 0 setting %d", blinking[0]);
+    if (blinking[0] == true) 
+    {
+        // LOG_DBG("blinking led");
+        if (led_state[0] == false)
+        {
+            toggle_led(0, 1);
+            // write_pin(8, 1);  // if pin is off toggle it on
+            // write_pin(9, 1);  // if pin is off toggle it on
+            led_state[0] = !led_state[0];
+        }
+        else if (led_state[0] == true)
+        {
+            toggle_led(0, 0);
+            // write_pin(8, 0);  // if pin is on toggle it off
+            // write_pin(9, 0);  // if pin is on toggle it off
+            led_state[0] = !led_state[0];
+        }
+
+        k_delayed_work_submit(&work_toggle_led_0, K_MSEC(500));
+    }
+}
+
+
+struct k_delayed_work work_toggle_led_1;
+
+void work_handler_toggle_led_1(struct k_work *work)
+{
+    if (blinking[1] == true) 
+    {
+        if (led_state[1] == false)
+        {
+            toggle_led(1, 1);
+            // write_pin(10, 1);  // if pin is off toggle it on
+            // write_pin(11, 1);  // if pin is off toggle it on
+            led_state[1] = !led_state[1];
+        }
+        else if (led_state[1] == true)
+        {
+            toggle_led(1, 0);
+            // write_pin(10, 0);  // if pin is on toggle it off
+            // write_pin(11, 0);  // if pin is on toggle it off
+            led_state[1] = !led_state[1];
+        }
+
+        k_delayed_work_submit(&work_toggle_led_1, K_MSEC(500));
+    }
+}
+
+
+struct k_delayed_work work_toggle_led_2;
+
+void work_handler_toggle_led_2(struct k_work *work)
+{
+    if (blinking[2] == true) 
+    {
+        if (led_state[2] == false)
+        {
+            toggle_led(2, 1);
+            // write_pin(12, 1);  // if pin is off toggle it on
+            // write_pin(13, 1);  // if pin is off toggle it on
+            led_state[2] = !led_state[2];
+        }
+        else if (led_state[2] == true)
+        {
+            toggle_led(2, 0);
+            // write_pin(12, 0);  // if pin is on toggle it off
+            // write_pin(13, 0);  // if pin is on toggle it off
+            led_state[2] = !led_state[2];
+        }
+
+        k_delayed_work_submit(&work_toggle_led_2, K_MSEC(500));
+    }
+}
+
+
+struct k_delayed_work work_toggle_led_3;
+
+void work_handler_toggle_led_3(struct k_work *work)
+{
+    if (blinking[3] == true) 
+    {
+        if (led_state[3] == false)
+        {
+            toggle_led(3, 1);
+            // write_pin(14, 1);  // if pin is off toggle it on
+            // write_pin(15, 1);  // if pin is off toggle it on
+            led_state[3] = !led_state[3];
+        }
+        else if (led_state[3] == true)
+        {
+            toggle_led(3, 0);
+            // write_pin(14, 0);  // if pin is on toggle it off
+            // write_pin(15, 0);  // if pin is on toggle it off
+            led_state[3] = !led_state[3];
+        }
+
+        k_delayed_work_submit(&work_toggle_led_3, K_MSEC(500));
+    }
+}
+
+void init_tca_blink_work()
+{
+    k_delayed_work_init(&work_toggle_led_0, work_handler_toggle_led_0);
+    k_delayed_work_init(&work_toggle_led_1, work_handler_toggle_led_1);
+    k_delayed_work_init(&work_toggle_led_2, work_handler_toggle_led_2);
+    k_delayed_work_init(&work_toggle_led_3, work_handler_toggle_led_3);
+}
+
+uint8_t tca_set_led(uint8_t target, char *state, char *_color)
+{
+    // int res;
+    // uint8_t pin = channel + LED_CHANNELS_OFFSET;
     uint8_t new_pin_state;
 
-    if (strcmp("on", state) == 0)  // turn on pin on current channel
+    if (_color != NULL)
     {
-      new_pin_state = 1;
-    }
-    else    // turn off pin on current channel
-    {
-        new_pin_state = 0;
+        if (strcmp("red", _color) == 0)
+        {
+            color[target] = 1;
+            LOG_DBG("setting color: %d on target: %d", color[target], target);
+        }
+        if (strcmp("green", _color) == 0) 
+        {
+            color[target] = 2;
+        }
+        if (strcmp("orange", _color) == 0)
+        {
+            color[target] = 3;
+        }
     }
 
-    res = read_pin(pin);
-    LOG_DBG("pin %d OLD state: %d", pin, res);
-    write_pin(pin, new_pin_state);
-    res = read_pin(pin);
-    LOG_DBG("pin %d NEW state: %d", pin, res);
+
+    // LOG_DBG("setting color: %d on target: %d", color[target], target);
+
+    if (strcmp("blink", state) == 0) 
+    {
+        // LOG_DBG("received blink on target %d",target);
+        blinking[target] = true;
+        if (target == 0)
+        {
+            // LOG_DBG("submitting work on target %d",target);
+            // LOG_DBG("blinking 0 setting %d", blinking[0]);
+            k_delayed_work_submit(&work_toggle_led_0, K_NO_WAIT);
+        }
+        else if (target == 1)
+        {
+            k_delayed_work_submit(&work_toggle_led_1, K_NO_WAIT);
+        }
+        else if (target == 2)
+        {
+            k_delayed_work_submit(&work_toggle_led_2, K_NO_WAIT);
+        }
+        else if (target == 3)
+        {
+            k_delayed_work_submit(&work_toggle_led_3, K_NO_WAIT);
+        }
+    }
+
+    else
+    {
+        blinking[target] = false;
+        if (strcmp("on", state) == 0)  // turn on pin on current channel
+        {
+        new_pin_state = 1;
+        }
+        else    // turn off pin on current channel
+        {
+            new_pin_state = 0;
+        }
+
+        toggle_led(target, new_pin_state);        
+    }
     
     return 0;
 }
