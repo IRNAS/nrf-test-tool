@@ -19,6 +19,12 @@ class LedColorEnum():
     RED = "red"
     ORANGE = "orange"
 
+class PinEnum():
+    TEST_1 = 0
+    TEST_2 = 1
+    TEST_3 = 2
+    TEST_4 = 3
+
 class BoardController():
     def __init__(self, serial_port, baudrate, timeout, lock):
         self.ser = SerialHandler(serial_port=serial_port, baudrate=baudrate, timeout=timeout)
@@ -128,6 +134,27 @@ class BoardController():
         if type(channel) != int or channel < 0 or channel > 15:
             logging.warning(f"Invalid channel: {channel}. Valid channels: 0-15.")
             return False
+
+        self.ser.write(f"adc {channel}")
+        read_line = self.ser.read_until_starts_with("Read analog value")
+        voltage = read_line.split(": ")[1]
+        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        self.lock.release()  # release lock
+        if ret == "OK":
+            logging.info(f"Successfully read adc value from serial: {ret}")
+            return voltage
+        if ret == "ERROR":
+            logging.error(f"Failed to read adc value from serial: {ret}")
+            return False
+
+    def read_adc_on_target(self, target, pin):
+        """Read adc on target 0-3, selected pin (TEST_1 is 0, TEST_2 is 1, TEST_3 is 2, TEST_4 is 3)"""
+        self.lock.acquire()  # acquire lock
+        if type(target) != int or target < 0 or target > 3:
+            logging.warning(f"Invalid target: {target}. Valid channels: 0-3.")
+            return False
+
+        channel = target * 4 + pin
 
         self.ser.write(f"adc {channel}")
         read_line = self.ser.read_until_starts_with("Read analog value")
