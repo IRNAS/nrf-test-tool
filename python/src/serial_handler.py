@@ -49,6 +49,7 @@ class SerialHandler:
         to = 0
         while True:
             rx = self.read()
+            #print(f"Read: {rx}")
             if len(rx) >= len(a) and rx[0:len(a)] == a or len(rx) >= len(b) and rx[0:len(b)] == b:
                 return rx
             if rx == "":
