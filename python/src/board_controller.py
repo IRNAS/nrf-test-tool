@@ -38,6 +38,24 @@ class BoardController():
             self.set_power(t, PowerCommandEnum.OFF)
             self.control_led_on_target(t, PowerCommandEnum.OFF, None)
 
+    def set_uart(self, state):
+        """Set all FTDI uart lines to ON/OFF"""
+        self.lock.acquire()
+        if type(state) != str or (state != PowerCommandEnum.ON and state != PowerCommandEnum.OFF):
+            logging.warning(f'Invalid state: {state}. Valid states are "on", "off"')
+            return False
+
+        self.ser.write(f"uart {state}")
+
+        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        self.lock.release()
+        if ret == "OK":
+            logging.info(f"Successfully toggled uart: {ret}")
+            return True
+        if ret == "ERROR":
+            logging.info(f"Failed to read from serial for cmd set_uart: {ret}")
+            return False
+
     def set_power(self, target, state):
         """Set power to target 0-3, state = on/off/ppk"""
         self.lock.acquire()  # acquire lock
