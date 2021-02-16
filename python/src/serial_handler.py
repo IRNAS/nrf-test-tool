@@ -8,9 +8,12 @@ class SerialHandler:
         self.ser = serial.Serial(serial_port, baudrate, timeout=timeout)
 
     def __del__(self):
-        if self.ser:
-            self.ser.close()
-            self.ser = None
+        try:
+            if self.ser:
+                self.ser.close()
+                self.ser = None
+        except Exception as e:
+            raise e
 
     def read(self):
         received = self.ser.readline()
@@ -37,8 +40,22 @@ class SerialHandler:
         to = 0
         while True:
             rx = self.read()
-            #print(rx)
+            # print(rx)
+            # print(s)
             if len(rx) >= len(s) and rx[0:len(s)] == s:
+                return rx
+            if rx == "":
+                to += 1
+                if to > 10:
+                    raise Exception("Serial timed out")
+
+    def read_until_contains(self, s):
+        to = 0
+        while True:
+            rx = self.read()
+            # print(rx)
+            # print(s)
+            if len(rx) >= len(s) and s in rx:
                 return rx
             if rx == "":
                 to += 1

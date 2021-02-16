@@ -27,18 +27,20 @@ class PinEnum():
 
 class BoardController():
     def __init__(self, serial_port, baudrate, timeout, lock):
-        self.ser = SerialHandler(serial_port=serial_port, baudrate=baudrate, timeout=timeout)
+        self.ser = None
+        try:
+            self.ser = SerialHandler(serial_port=serial_port, baudrate=baudrate, timeout=timeout)
+        except Exception as e:
+            print(e)
         self.lock = lock
 
         for t in range(0, 4):
             self.set_power(t, PowerCommandEnum.OFF)
-            self.control_led_on_target(t, PowerCommandEnum.OFF, LedColorEnum.GREEN)
+            self.control_led_on_target(t, PowerCommandEnum.OFF, None)
 
     def set_power(self, target, state):
         """Set power to target 0-3, state = on/off/ppk"""
         self.lock.acquire()  # acquire lock
-        print(self.lock)
-        print(f"Setting power on {target} to {state}")
         if type(target) != int or target < 0 or target > 3:
             logging.warning(f"Invalid target: {target}. Valid targets: 0-3.")
             return False
