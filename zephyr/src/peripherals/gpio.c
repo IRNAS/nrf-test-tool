@@ -33,6 +33,18 @@ int dk_gpio_init(void)
     return err;
 }
 
+void enable_uart(void)
+{
+    enable_pin(UART_RX_ENABLE);
+    enable_pin(UART_RX_ENABLE);
+}
+
+void disable_uart(void)
+{
+    disable_pin(UART_RX_ENABLE);
+    disable_pin(UART_RX_ENABLE);
+}
+
 void configure_pin(uint8_t pin, uint32_t direction) 
 {
     gpio_pin_configure(gpio_dev, pin, direction);

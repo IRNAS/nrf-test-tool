@@ -348,6 +348,21 @@ uint8_t gpio_reset(uint8_t channel)
     return 0;
 }
 
+uint8_t toggle_uart(char *state)
+{
+    if (strcmp("on", state) == 0) 
+    {
+        enable_uart();
+        return 0;
+    }   
+    if (strcmp("off", state) == 0)
+    {
+        disable_uart();
+        return 0;
+    }
+    return -1;
+}
+
 void test_adc_chip(void)
 {
     int16_t readings[4][4] = {{-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}};
