@@ -13,6 +13,7 @@ uint8_t tca_detect_device(uint8_t channel);
 void init_tca_blink_work();
 
 uint8_t gpio_reset(uint8_t channel);
+uint8_t gpio_toggle_uart(void);
 
 void test_adc_chip(void);
 uint16_t adc_read_voltage(uint8_t target, uint8_t channel);

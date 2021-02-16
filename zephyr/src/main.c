@@ -122,6 +122,21 @@ static int cmd_jtag(const struct shell *shell, size_t argc, char **argv)
 }
 SHELL_CMD_ARG_REGISTER(jtag, NULL, "parameters: <channel num (0-7) or -1 (off)>", cmd_jtag, 2, 0);
 
+static int cmd_uart(const struct shell *shell, size_t argc, char **argv)
+{
+	if (strcmp("off", argv[1]) != 0 && strcmp("on", argv[1])) 
+	{
+		shell_print(shell, "wrong parameter <state> \nERROR");
+		return -1;
+	}
+	char *state = argv[1];
+	shell_print(shell, "Received command: uart enable %s", state);
+	int err = toggle_uart(state);
+	shell_print(shell, "OK");
+	return 0;
+}
+SHELL_CMD_ARG_REGISTER(uart, NULL, "parameters: <state (on, off)>", cmd_uart, 2, 0);
+
 static int cmd_reset(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;
