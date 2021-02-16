@@ -37,8 +37,6 @@ class BoardController():
     def set_power(self, target, state):
         """Set power to target 0-3, state = on/off/ppk"""
         self.lock.acquire()  # acquire lock
-        print(self.lock)
-        print(f"Setting power on {target} to {state}")
         if type(target) != int or target < 0 or target > 3:
             logging.warning(f"Invalid target: {target}. Valid targets: 0-3.")
             return False
