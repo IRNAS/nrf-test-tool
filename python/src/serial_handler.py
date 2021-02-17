@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import serial
-
+import time
 
 class SerialHandler:
 
     def __init__(self, serial_port, baudrate, timeout=2):
         self.ser = serial.Serial(serial_port, baudrate, timeout=timeout)
+        self.timeout = timeout
 
     def __del__(self):
         try:
@@ -27,6 +28,7 @@ class SerialHandler:
 
     def read_until(self, s):
         to = 0
+        read_start_time = time.time()
         while True:
             rx = self.read()
             if rx == s:
@@ -35,9 +37,12 @@ class SerialHandler:
                 to += 1
                 if to > 10:
                     raise Exception("Serial timed out")
+            if time.time() - read_start_time > self.timeout:
+                raise Exception(f"Didn't read {s} in {self.timeout} seconds")
 
     def read_until_starts_with(self, s):
         to = 0
+        read_start_time = time.time()
         while True:
             rx = self.read()
             # print(rx)
@@ -48,12 +53,15 @@ class SerialHandler:
                 to += 1
                 if to > 10:
                     raise Exception("Serial timed out")
+            if time.time() - read_start_time > self.timeout:
+                raise Exception(f"Didn't read {s} in {self.timeout} seconds")
 
     def read_until_contains(self, s):
         to = 0
+        read_start_time = time.time()
         while True:
             rx = self.read()
-            # print(rx)
+            print(rx)
             # print(s)
             if len(rx) >= len(s) and s in rx:
                 return rx
@@ -61,9 +69,12 @@ class SerialHandler:
                 to += 1
                 if to > 10:
                     raise Exception("Serial timed out")
+            if time.time() - read_start_time > self.timeout:
+                raise Exception(f"Didn't read {s} in {self.timeout} seconds")
 
     def read_until_starts_with_either(self, a, b):
         to = 0
+        read_start_time = time.time()
         while True:
             rx = self.read()
             #print(f"Read: {rx}")
@@ -73,3 +84,5 @@ class SerialHandler:
                 to += 1
                 if to > 10:
                     raise Exception("Serial timed out. Did you flash code with debug enabled?")
+            if time.time() - read_start_time > self.timeout:
+                raise Exception(f"Didn't read {s} in {self.timeout} seconds")
