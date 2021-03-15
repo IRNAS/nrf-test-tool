@@ -45,6 +45,7 @@ If above .hex file doesn't work, the following steps need to be done:
 * For each of listed options select option to use them with Arduino headers: UART1, Button 2, LED 2, LED 4
 * Press Q and confirm save
 * Execute `west build -b nrf9160dk_nrf52840 && west flash`
+* Lock nrf91 with `nrfjprog --rbp ALL`
 
 NRF52 chip is now correctly configured and switch PROG/DEBUG can be flippend back to nrf91.
 
