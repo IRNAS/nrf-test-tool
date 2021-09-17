@@ -141,11 +141,19 @@ class BoardController():
 
         channel = target * 2
         self.ser.write(f"reset {channel}")
-        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        try:
+            ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        except Exception as e:
+            self.lock.release()
+            return False
         time.sleep(0.05)
         channel += 1
         self.ser.write(f"reset {channel}")
-        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        try:
+            ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        except Exception as e:
+            self.lock.release()
+            return False
         self.lock.release()  # release lock
         if ret == "OK":
             #logging.info(f"Successfully read from serial for cmd: {ret}")

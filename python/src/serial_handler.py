@@ -6,6 +6,7 @@ class SerialHandler:
 
     def __init__(self, serial_port, baudrate, timeout=2):
         self.ser = serial.Serial(serial_port, baudrate, timeout=timeout)
+        self.timeout = timeout
 
     def __del__(self):
         try:
@@ -29,6 +30,7 @@ class SerialHandler:
 
     def read_until(self, s):
         to = 0
+        read_start_time = time.time()
         while True:
             rx = self.read()
             if rx == s:
@@ -37,6 +39,8 @@ class SerialHandler:
                 to += 1
                 if to > 10:
                     raise Exception("Serial timed out")
+            if time.time() - read_start_time > self.timeout:
+                raise Exception(f"Didn't read {s} in {self.timeout} seconds")
 
     def read_until_starts_with(self, s, timeout=10):
         to = 0
