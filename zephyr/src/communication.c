@@ -59,7 +59,10 @@ void test_tca_chip(void)
 uint8_t tca_set_relay(uint8_t target, char* relay, char *state)
 {
     int res;
-    uint8_t pin = 16 + target * 2;  // skip first 16 pins
+    uint8_t pin = 23 - target * 2;  // skip first 16 pins
+    // pin 16 is idc4
+    // we need idc1 (22 - test_6, 23 - test_5)
+    // we need idc2 (20 - test_6, 21 - test_5)
     uint8_t new_pin_state;
 
     if (strcmp("on", state) == 0)  // state on, turn on power from ppk (LDO)
@@ -73,11 +76,11 @@ uint8_t tca_set_relay(uint8_t target, char* relay, char *state)
 
     if (strcmp("battery", relay) == 0)
     {
-        pin = pin + 1;  // battery pin is odd
+        pin = pin;  // battery pin is odd
     }
     else if (strcmp("charge", relay) == 0)
     {
-        pin = pin;  // battery pin is even
+        pin = pin - 1;  // battery pin is even
     }
 
     res = read_pin(pin);
