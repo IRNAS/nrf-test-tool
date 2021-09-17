@@ -56,6 +56,39 @@ void test_tca_chip(void)
     }
 }
 
+uint8_t tca_set_relay(uint8_t target, char* relay, char *state)
+{
+    int res;
+    uint8_t pin = 16 + target * 2;  // skip first 16 pins
+    uint8_t new_pin_state;
+
+    if (strcmp("on", state) == 0)  // state on, turn on power from ppk (LDO)
+    {
+      new_pin_state = 1;
+    }
+    else if (strcmp("off", state) == 0)   // turn on power from nrf91 (PRO)
+    {   
+        new_pin_state = 0;
+    }
+
+    if (strcmp("battery", relay) == 0)
+    {
+        pin = pin + 1;  // battery pin is odd
+    }
+    else if (strcmp("charge", relay) == 0)
+    {
+        pin = pin;  // battery pin is even
+    }
+
+    res = read_pin(pin);
+    LOG_DBG("pin %d OLD state: %d", pin, res);
+    write_pin(pin, new_pin_state);
+    res = read_pin(pin);
+    LOG_DBG("pin %d NEW state: %d", pin, res);
+
+    return 0;
+}
+
 uint8_t tca_set_power(uint8_t target, char *state)
 {
     int res;

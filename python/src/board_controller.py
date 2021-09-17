@@ -9,6 +9,9 @@ class PowerCommandEnum():
     PPK = "ppk"
     BLINK = "blink"
 
+class RelayEnum():
+    CHARGE = "charge"
+    BATTERY = "battery"
 class JtagDeviceEnum():
     NRF52 = 0
     NRF91 = 1
@@ -273,6 +276,39 @@ class BoardController():
             self.ser.write(f"led {target} {state} {color}")
         else:
             self.ser.write(f"led {target} {state}")
+        try:
+            ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+            self.lock.release()  # release lock
+        except:
+            self.lock.release()
+            return False
+        if ret == "OK":
+            #logging.info(f"Successfully read from serial for cmd: {ret}")
+            return True
+        if ret == "ERROR":
+            #logging.error(f"Failed to read from serial for cmd: {ret}")
+            return False
+    
+    def control_relay_on_target(self, target, relay, state):
+        """Control relay on target 0-3, relay=bat/pwr, state=on/off"""
+        self.lock.acquire()  # acquire lock
+        if type(target) != int or target < 0 or target > 3:
+            logging.warning(f"Invalid target: {target}. Valid targets: 0-3")
+            self.lock.release()  # release lock
+            return False
+
+        if type(state) != str or (state != PowerCommandEnum.ON and state != PowerCommandEnum.OFF):
+            logging.warning(f'Invalid state: {state}. Valid states are "on", "off"')
+            self.lock.release()  # release lock
+            return False
+
+        if relay is not None:
+            if type(relay) != str or (relay != RelayEnum.CHARGE and relay != RelayEnum.BATTERY):
+                logging.warning(f'Invalid relay: {relay}. Valid relays are "charge" and "battery"')
+                self.lock.release()  # release lock
+                return False
+
+        self.ser.write(f"relay {target} {state} {relay}")
         try:
             ret = self.ser.read_until_starts_with_either("OK", "ERROR")
             self.lock.release()  # release lock

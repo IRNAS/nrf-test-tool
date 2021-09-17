@@ -1,3 +1,5 @@
 zephyr/build/*
 .vscode/*
 **/__pycache__/*
+build/*
+build
