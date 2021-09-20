@@ -201,6 +201,32 @@ static int cmd_adc(const struct shell *shell, size_t argc, char **argv)
 }
 SHELL_CMD_ARG_REGISTER(adc, NULL, "parameters: <adc channel num (0-15)>", cmd_adc, 2, 0);
 
+static int cmd_gain(const struct shell *shell, size_t argc, char **argv)
+{
+	char *after_num = NULL;
+	int target = strtol(argv[1], &after_num, 10);
+	if (target < 0 || target > MAX_TARGET_NUM) 
+	{
+		shell_print(shell, "ERROR: wrong parameter <target>");
+		return -1;
+	}
+	uint16_t gain = strtol(argv[2], &after_num, 0);
+	adc_set_gain(target, gain);
+
+	uint16_t read_gain = adc_get_gain(target);
+	shell_print(shell, "Read adc %u gain: %x", read_gain, gain);
+	if (read_gain != gain)
+	{
+		shell_print(shell, "ERROR");
+	}
+	else
+	{
+		shell_print(shell, "OK");
+	}
+	return 0;
+}
+SHELL_CMD_ARG_REGISTER(gain, NULL, "parameters: <adc target (0-3), gain (0x000, 0x0200, 0x0400, 0x0600, 0x0800, 0x0A00)>", cmd_gain, 3, 0);
+
 static int cmd_led(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;

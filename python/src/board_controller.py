@@ -28,6 +28,14 @@ class PinEnum():
     TEST_3 = 2
     TEST_4 = 3
 
+class AdcGainEnum():
+    V6 = 0x0000
+    V4 = 0x0200
+    V2 = 0x0400
+    V1 = 0x0600
+    V05 = 0x0800
+    V025 = 0x0A00
+
 class BoardController():
     def __init__(self, serial_port, baudrate, timeout, lock):
         self.ser = None
@@ -40,6 +48,7 @@ class BoardController():
         for t in range(0, 4):
             self.set_power(t, PowerCommandEnum.OFF)
             self.control_led_on_target(t, PowerCommandEnum.OFF, None)
+            self.set_adc_gain(t, AdcGainEnum.V6)
 
     def set_uart(self, state):
         """Set all FTDI uart lines to ON/OFF"""
@@ -184,6 +193,23 @@ class BoardController():
             logging.error(f"Failed to read adc value from serial: {ret}")
             return False
 
+    def set_adc_gain(self, target, gain):
+        """Set adc gain on target"""
+        self.lock.acquire()  # acquire lock
+        if type(target) != int or target < 0 or target > 3:
+            logging.warning(f"Invalid target: {target}. Valid targets: 0-3.")
+            return False
+
+        self.ser.write(f"gain {target} {gain}")
+        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        self.lock.release()  # release lock
+        if ret == "OK":
+            #logging.info(f"Successfully read adc value from serial: {ret}")
+            return True
+        if ret == "ERROR":
+            logging.error(f"Failed to read adc value from serial: {ret}")
+            return False
+
     def read_adc_on_target(self, target, pin):
         """Read adc on target 0-3, selected pin (TEST_1 is 0, TEST_2 is 1, TEST_3 is 2, TEST_4 is 3)"""
         self.lock.acquire()  # acquire lock
@@ -289,8 +315,8 @@ class BoardController():
             #logging.error(f"Failed to read from serial for cmd: {ret}")
             return False
     
-    def control_relay_on_target(self, target, relay, state):
-        """Control relay on target 0-3, relay=bat/pwr, state=on/off"""
+    def control_relay_on_target(self, target, state, relay):
+        """Control relay on target 0-3, relay=battery/charge, state=on/off"""
         self.lock.acquire()  # acquire lock
         if type(target) != int or target < 0 or target > 3:
             logging.warning(f"Invalid target: {target}. Valid targets: 0-3")
@@ -316,8 +342,8 @@ class BoardController():
             self.lock.release()
             return False
         if ret == "OK":
-            #logging.info(f"Successfully read from serial for cmd: {ret}")
+            # logging.info(f"Successfully read from serial for cmd: {ret}")
             return True
         if ret == "ERROR":
-            #logging.error(f"Failed to read from serial for cmd: {ret}")
+            # logging.error(f"Failed to read from serial for cmd: {ret}")
             return False

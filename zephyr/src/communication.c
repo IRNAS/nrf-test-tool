@@ -424,6 +424,16 @@ uint16_t adc_read_voltage(uint8_t target, uint8_t channel)
     return ads_convert_to_analog(target, digital_value);
 }
 
+void adc_set_gain(uint8_t target, uint16_t gain)
+{
+    ads_set_gain(target, gain);
+}
+
+uint16_t adc_get_gain(uint8_t target)
+{
+    return ads_get_gain(target);
+}
+
 void test_max_chip(void)  
 {
     uint8_t read_A0 = max_read_dir0();

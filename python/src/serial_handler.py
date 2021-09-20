@@ -47,7 +47,7 @@ class SerialHandler:
         start_time = time.time()
         while True:
             rx = self.read()
-            #print(rx)
+            # print(rx)
             # print(s)
             if len(rx) >= len(s) and rx[0:len(s)] == s:
                 return rx

@@ -18,6 +18,8 @@ uint8_t gpio_toggle_uart(void);
 
 void test_adc_chip(void);
 uint16_t adc_read_voltage(uint8_t target, uint8_t channel);
+void adc_set_gain(uint8_t target, uint16_t gain);
+uint16_t adc_get_gain(uint8_t target);
 
 void test_max_chip(void);
 uint8_t max_set_jtag(int8_t channel);
