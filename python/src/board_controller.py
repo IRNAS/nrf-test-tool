@@ -49,6 +49,8 @@ class BoardController():
             self.set_power(t, PowerCommandEnum.OFF)
             self.control_led_on_target(t, PowerCommandEnum.OFF, None)
             self.set_adc_gain(t, AdcGainEnum.V6)
+            self.control_relay_on_target(t, "off", RelayEnum.BATTERY)
+            self.control_relay_on_target(t, "off", RelayEnum.CHARGE)
 
     def set_uart(self, state):
         """Set all FTDI uart lines to ON/OFF"""
