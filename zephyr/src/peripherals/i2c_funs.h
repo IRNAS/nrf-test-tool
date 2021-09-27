@@ -18,6 +18,8 @@ extern "C"
     void write_word(uint8_t address, uint8_t reg, uint16_t val);
     uint16_t read_word(uint8_t address, uint8_t reg);
 
+void write_bit(uint8_t address, uint8_t reg, uint8_t bit, uint8_t val);
+
     void write_empty(uint8_t address, uint8_t reg);
 
 #ifdef __cplusplus

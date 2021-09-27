@@ -74,6 +74,19 @@ void i2c_scan(void)
  * @param val
  *
  */
+
+void write_bit(uint8_t address, uint8_t reg, uint8_t bit, uint8_t val)
+{
+    if (i2c_reg_update_byte(i2c_dev, address, reg, bit, val) != 0)
+    {
+        LOG_ERR("Error on i2c_update()");
+    }
+    else
+    {
+        LOG_DBG("i2c_update: no error");
+    }
+}
+
 void write_reg(uint8_t address, uint8_t reg, uint8_t val)
 {
     if (i2c_reg_write_byte(i2c_dev, address, reg, val) != 0)

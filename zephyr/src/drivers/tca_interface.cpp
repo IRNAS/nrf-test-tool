@@ -10,17 +10,30 @@ TCA6424A m_tca6424 = TCA6424A(0x22);
 
 void tca_init(void) 
 {
-    // make banks 0, 1 and 2 output
+    // make banks 0, 2 output
     m_tca6424.setBankDirection(0,0);
-    m_tca6424.setBankDirection(1,0);
-    m_tca6424.setBankDirection(2,0);
-    // make bank 2 input
-    // m_tca6424.setBankDirection(2,1);
-
     // set all channels to 0
     write_bank(0,0);
-    write_bank(1,0);
+
+    m_tca6424.setBankDirection(2,0);
     write_bank(2,0);
+
+    // m_tca6424.setBankDirection(1,1);
+    // write_bank(1,0);
+
+    // write_bank(1,0);
+    // set some pins on bank 1 as inputs, some as outputs
+    m_tca6424.setPinDirection(8,1);  // red LEDs previously
+    m_tca6424.setPinDirection(10,1);  // red LEDs previously
+    m_tca6424.setPinDirection(12,1);  // red LEDs previously
+    m_tca6424.setPinDirection(14,1);  // red LEDs previously
+
+    m_tca6424.setPinDirection(9,0);  // green LED
+    m_tca6424.setPinDirection(11,0);  // green LED
+    m_tca6424.setPinDirection(13,0);  // green LED
+    m_tca6424.setPinDirection(15,0);  // green LED
+    // m_tca6424.setBankDirection(1,0);
+
 
     //write_bank(2,1);
 }
@@ -48,6 +61,11 @@ uint8_t read_pin(uint16_t pin)
 uint8_t read_bank(uint8_t bank) 
 {
     return m_tca6424.readBank(bank);
+}
+
+uint8_t read_bank_direction(uint8_t bank) 
+{
+    return m_tca6424.getBankDirection(bank);
 }
 
 #endif //__cplusplus

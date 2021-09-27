@@ -90,8 +90,6 @@ uint8_t TCA6424A::readPin(uint8_t pin) {
  * @return 8 pins' logic levels (0 or 1 for each pin)
  */
 uint8_t TCA6424A::readBank(uint8_t bank) {
-    //I2Cdev::readByte(devAddr, TCA6424A_RA_INPUT0 + bank, buffer);
-    //return buffer[0];
 
     uint8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0 + bank);
     return result;
@@ -291,8 +289,8 @@ void TCA6424A::setAllPolarity(uint8_t bank0, uint8_t bank1, uint8_t bank2) {
  * @return Pin direction setting (0 or 1)
  */
 bool TCA6424A::getPinDirection(uint16_t pin) {
-    //I2Cdev::readBit(devAddr, TCA6424A_RA_CONFIG0 + (pin / 8), pin % 8, buffer);
-    //return buffer[0];
+    // uint8_t bit = readBit(devAddr, TCA6424A_RA_CONFIG0 + (pin / 8), pin % 8, buffer);
+    // return bit;
     return 0;
 }
 
@@ -301,9 +299,9 @@ bool TCA6424A::getPinDirection(uint16_t pin) {
  * @return 8 pins' direction settings (0 or 1 for each pin)
  */
 uint8_t TCA6424A::getBankDirection(uint8_t bank) {
-    //I2Cdev::readByte(devAddr, TCA6424A_RA_CONFIG0 + bank, buffer);
+    uint8_t bank_state = read_reg(devAddr, TCA6424A_RA_CONFIG0 + bank);
     //return buffer[0];
-    return 0;
+    return bank_state;
 }
 
 /** Get all pin direction (I/O) settings from all banks.
@@ -320,7 +318,7 @@ void TCA6424A::getAllDirection(uint8_t *banks) {
  * @param bank1 Container for Bank 1's pin values (P10-P17)
  * @param bank2 Container for Bank 2's pin values (P20-P27)
  */
-void TCA6424A::getAllDirection(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2) {
+void TCA6424A::getAllDirection() {
     //I2Cdev::readBytes(devAddr, TCA6424A_RA_CONFIG0, 3, buffer);
     //*bank0 = buffer[0];
     //*bank1 = buffer[1];
@@ -332,7 +330,7 @@ void TCA6424A::getAllDirection(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2) {
  * @param direction Pin direction setting (0 or 1)
  */
 void TCA6424A::setPinDirection(uint16_t pin, bool direction) {
-    //I2Cdev::writeBit(devAddr, TCA6424A_RA_CONFIG0 + (pin / 8), pin % 8, direction);
+    write_bit(devAddr, TCA6424A_RA_CONFIG0 + (pin / 8), pin % 8, direction);
 }
 
 /** Set all pin direction (I/O) settings in one bank.

@@ -296,6 +296,22 @@ void init_tca_blink_work()
     k_delayed_work_init(&work_toggle_led_3, work_handler_toggle_led_3);
 }
 
+uint8_t tca_read_bank(uint8_t bank)
+{
+    uint8_t bank_state = read_bank(bank);
+    LOG_DBG("read bank %d state: %d", bank, bank_state);
+
+    return bank_state;
+}
+
+uint8_t tca_read_bank_direction(uint8_t bank)
+{
+    uint8_t bank_state = read_bank_direction(bank);
+    LOG_DBG("read bank %d direction: %d", bank, bank_state);
+
+    return bank_state;
+}
+
 uint8_t tca_set_led(uint8_t target, char *state, char *_color)
 {
     // int res;

@@ -126,7 +126,7 @@ class TCA6424A {
         bool getPinDirection(uint16_t pin);
         uint8_t getBankDirection(uint8_t bank);
         void getAllDirection(uint8_t *banks);
-        void getAllDirection(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2);
+        void getAllDirection();
         void setPinDirection(uint16_t pin, bool direction);
         void setBankDirection(uint8_t bank, uint8_t direction);
         void setAllDirection(uint8_t *banks);
