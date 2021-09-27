@@ -4,7 +4,7 @@ import time
 
 class SerialHandler:
 
-    def __init__(self, serial_port, baudrate, timeout=2):
+    def __init__(self, serial_port, baudrate, timeout=50):
         self.ser = serial.Serial(serial_port, baudrate, timeout=timeout)
         self.timeout = timeout
 
@@ -51,12 +51,12 @@ class SerialHandler:
             # print(s)
             if len(rx) >= len(s) and rx[0:len(s)] == s:
                 return rx
-            if rx == "":
-                to += 1
-                if to > 10:
-                    raise Exception("Serial timed out")
+            # if rx == "":
+            #     to += 1
+            #     if to > 10:
+            #         raise Exception("Serial timed out - retries")
             if time.time() - start_time > timeout:
-                raise Exception("Serial timed out")
+                raise Exception("Serial timed out - timeout")
 
     def read_until_contains(self, s, timeout=10):
         to = 0
@@ -79,13 +79,13 @@ class SerialHandler:
         start_time = time.time()
         while True:
             rx = self.read()
-            #print(f"Read: {rx}")
+            # print(f"Read: {rx}")
             if len(rx) >= len(a) and rx[0:len(a)] == a or len(rx) >= len(b) and rx[0:len(b)] == b:
                 return rx
-            if rx == "":
-                to += 1
-                if to > 10:
-                    raise Exception("Serial timed out. Did you flash code with debug enabled?")
+            # if rx == "":
+            #     to += 1
+            #     if to > 10:
+            #         raise Exception("Serial timed out. Did you flash code with debug enabled?")
             if time.time() - start_time > timeout:
                 raise Exception("Serial timed out")
 
@@ -94,13 +94,14 @@ class SerialHandler:
         start_time = time.time()
         while True:
             rx = self.read()
-            #print(f"Read: {rx}")
+            # print(f"Read: {rx}")
             for var in vars:
                 if len(rx) >= len(var) and rx[0:len(var)] == var:
+                    # print(f"Found match")
                     return rx
-            if rx == "":
-                to += 1
-                if to > 10:
-                    raise Exception("Serial timed out. Did you flash code with debug enabled?")
+            # if rx == "":
+            #     to += 1
+            #     if to > 10:
+            #         raise Exception("Serial timed out. Did you flash code with debug enabled?")
             if time.time() - start_time > timeout:
                 raise Exception("Serial timed out")

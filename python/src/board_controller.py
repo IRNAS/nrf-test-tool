@@ -227,7 +227,7 @@ class BoardController():
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         self.lock.release()  # release lock
         if ret == "OK":
-            #logging.info(f"Successfully read adc value from serial: {ret}")
+            # logging.info(f"Successfully read adc value from serial: {ret}")
             return int(voltage)
         if ret == "ERROR":
             logging.error(f"Failed to read adc value from serial: {ret}")
