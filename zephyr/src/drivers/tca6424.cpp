@@ -173,7 +173,9 @@ void TCA6424A::writePin(uint16_t pin, uint8_t value) {
 
     uint8_t bitNum = pin % 8;
     uint8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0 + (pin / 8));
+    printk("bank 1 OLD state: %d\n", result);
     result = (value != 0) ? (result | (1 << bitNum)) : (result & ~(1 << bitNum));
+    printk("bank 1 NEW state: %d\n", result);
     write_reg(devAddr, TCA6424A_RA_OUTPUT0 + (pin / 8), result);
 }
 
@@ -261,7 +263,7 @@ void TCA6424A::setPinPolarity(uint16_t pin, bool polarity) {
  * @return New pins' polarity settings (0 or 1 for each pin)
  */
 void TCA6424A::setBankPolarity(uint8_t bank, uint8_t polarity) {
-    //I2Cdev::writeByte(devAddr, TCA6424A_RA_POLARITY0 + bank, polarity);
+    write_reg(devAddr, TCA6424A_RA_POLARITY0 + bank, polarity);
 }
 
 /** Set all pin polarity (normal/inverted) settings in all banks.

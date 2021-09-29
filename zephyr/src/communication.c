@@ -10,7 +10,7 @@
 #include <ads1015_interface.hpp>
 
 #define LED_CHANNELS_OFFSET     8
-#define DEVICE_CHANNELS_OFFSET 16
+#define DEVICE_CHANNELS_OFFSET 8
 
 LOG_MODULE_REGISTER(communication);
 
@@ -56,7 +56,7 @@ void test_tca_chip(void)
     }
 }
 
-uint8_t tca_set_relay(uint8_t target, char* relay, char *state)
+uint8_t tca_set_relay(uint8_t target, char *relay, char *state)
 {
     int res;
     uint8_t pin = 23 - target * 2;  // skip first 16 pins
@@ -380,10 +380,10 @@ uint8_t tca_set_led(uint8_t target, char *state, char *_color)
     return 0;
 }
 
-uint8_t tca_detect_device(uint8_t channel)
+uint8_t tca_detect_device(uint8_t target)
 {
     int res;
-    uint8_t pin = channel + DEVICE_CHANNELS_OFFSET;
+    uint8_t pin = (target * 2) + DEVICE_CHANNELS_OFFSET;
 
     res = read_pin(pin);
     LOG_DBG("read pin %d state: %d", pin, res);
@@ -398,6 +398,22 @@ uint8_t gpio_reset(uint8_t channel)
     k_sleep(K_MSEC(100));
     disable_pin(pin);
     return 0;
+}
+
+uint8_t set_red_led(uint8_t target, char *state)  
+{
+    uint8_t pin = (target * 2) + 4;  // gpio pins start with number 3 and end with 10
+    if (strcmp("on", state) == 0) 
+    {
+        enable_pin(pin);
+        return 0;
+    }   
+    if (strcmp("off", state) == 0)
+    {
+        disable_pin(pin);
+        return 0;
+    }
+    return -1;
 }
 
 uint8_t toggle_uart(char *state)

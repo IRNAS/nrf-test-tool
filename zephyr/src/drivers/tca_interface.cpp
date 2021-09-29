@@ -18,21 +18,25 @@ void tca_init(void)
     m_tca6424.setBankDirection(2,0);
     write_bank(2,0);
 
-    // m_tca6424.setBankDirection(1,1);
-    // write_bank(1,0);
-
-    // write_bank(1,0);
-    // set some pins on bank 1 as inputs, some as outputs
-    m_tca6424.setPinDirection(8,1);  // red LEDs previously
-    m_tca6424.setPinDirection(10,1);  // red LEDs previously
-    m_tca6424.setPinDirection(12,1);  // red LEDs previously
-    m_tca6424.setPinDirection(14,1);  // red LEDs previously
-
-    m_tca6424.setPinDirection(9,0);  // green LED
-    m_tca6424.setPinDirection(11,0);  // green LED
-    m_tca6424.setPinDirection(13,0);  // green LED
-    m_tca6424.setPinDirection(15,0);  // green LED
+    m_tca6424.setBankDirection(1, 170);  // write 255 to set direction 1 to whole bank
+    m_tca6424.setBankPolarity(1, 170);
     // m_tca6424.setBankDirection(1,0);
+    write_bank(1,0);
+
+    // something weird is going on - RED led toggles when writing command to toggle green - shouldnt be a problem, the logic seems to be reversed tho
+
+    // GREEN LED TURNS on when red LED pin is high and green pin is LOW
+    // set some pins on bank 1 as inputs, some as outputs
+    // m_tca6424.setPinDirection(10,1);  // red LEDs previously
+    // m_tca6424.setPinDirection(12,1);  // red LEDs previously
+    // m_tca6424.setPinDirection(14,1);  // red LEDs previously
+    // m_tca6424.setPinDirection(16,1);  // red LEDs previously
+
+    // m_tca6424.setPinDirection(11,0);  // green LED
+    // m_tca6424.setPinDirection(13,0);  // green LED
+    // m_tca6424.setPinDirection(15,0);  // green LED
+    // m_tca6424.setPinDirection(17,0);  // green LED
+    // write_bank(1,0);
 
 
     //write_bank(2,1);

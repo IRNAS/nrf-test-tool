@@ -202,6 +202,28 @@ static int cmd_reset(const struct shell *shell, size_t argc, char **argv)
 }
 SHELL_CMD_ARG_REGISTER(reset, NULL, "parameters: <channel num (0-7)>", cmd_reset, 2, 0);
 
+static int cmd_red_led(const struct shell *shell, size_t argc, char **argv)
+{
+	char *after_num = NULL;
+	int target = strtol(argv[1], &after_num, 10);
+	if (target < 0 || target > MAX_CHANNEL_NUM) 
+	{
+		shell_print(shell, "ERROR: wrong parameter <target>");
+		return -1;
+	}
+	if (strcmp("off", argv[2]) != 0 && strcmp("on", argv[2]) != 0) 
+	{
+		shell_print(shell, "wrong parameter <state> \nERROR");
+		return -1;
+	}
+	char *state = argv[2];
+	shell_print(shell, "Received command: led_red %s on target %d.", state, target);
+	int err = set_red_led(target, state);		// TODO return OK or ERR
+	shell_print(shell, "OK");
+	return 0;
+}
+SHELL_CMD_ARG_REGISTER(set_red_led, NULL, "parameters: <target num (0-3) state (on,off)>", cmd_red_led, 3, 0);
+
 static int cmd_adc(const struct shell *shell, size_t argc, char **argv)
 {
 	char *after_num = NULL;
@@ -299,8 +321,8 @@ static int cmd_detect(const struct shell *shell, size_t argc, char **argv)
 		return -1;
 	}
 	shell_print(shell, "Received command: detect devices on target: %d", target);
-	uint8_t channel = (3 - target) * 2;  // detect board if present - pins are reversed so its 3-target
-	int err = tca_detect_device(channel);		// TODO return OK or ERR
+	// uint8_t channel = (3 - target) * 2;  // detect board if present - pins are reversed so its 3-target
+	int err = tca_detect_device(target);		// TODO return OK or ERR
 	int ret;
 	if (err == 0)
 	{
