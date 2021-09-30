@@ -167,11 +167,22 @@ void TCA6424A::getAllOutputLevel(uint8_t *bank0, uint8_t *bank1, uint8_t *bank2)
  * @param pin Which pin to write (0-23)
  * @param value New pin output logic level (0 or 1)
  */
-void TCA6424A::writePin(uint16_t pin, uint8_t value) {
+void TCA6424A::writePinInverse(uint16_t pin, uint8_t value) {
     //I2Cdev::writeBit(devAddr, TCA6424A_RA_OUTPUT0 + (pin / 8), pin % 8, value);
 
     uint8_t bitNum = pin % 8;
     uint8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0 + (pin / 8)) ^ 255;  // flip bits with XOR operation
+    printk("bank 1 OLD state: %d\n", result);
+    result = (value != 0) ? (result | (1 << bitNum)) : (result & ~(1 << bitNum));
+    printk("bank 1 NEW state: %d\n", result);
+    write_reg(devAddr, TCA6424A_RA_OUTPUT0 + (pin / 8), result);
+}
+
+void TCA6424A::writePin(uint16_t pin, uint8_t value) {
+    //I2Cdev::writeBit(devAddr, TCA6424A_RA_OUTPUT0 + (pin / 8), pin % 8, value);
+
+    uint8_t bitNum = pin % 8;
+    uint8_t result = read_reg(devAddr, TCA6424A_RA_INPUT0 + (pin / 8));  // flip bits with XOR operation
     printk("bank 1 OLD state: %d\n", result);
     result = (value != 0) ? (result | (1 << bitNum)) : (result & ~(1 << bitNum));
     printk("bank 1 NEW state: %d\n", result);

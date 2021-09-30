@@ -57,6 +57,11 @@ void write_pin(uint16_t pin, uint8_t value)
     m_tca6424.writePin(pin, value);
 }
 
+void write_pin_inverse(uint16_t pin, uint8_t value)
+{
+    m_tca6424.writePinInverse(pin, value);
+}
+
 void write_bank(uint8_t bank, uint8_t value) 
 {
     m_tca6424.writeBank(bank, value);

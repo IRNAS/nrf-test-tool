@@ -11,6 +11,7 @@ extern "C"
     uint8_t test_connection(void);
     void tca_init(void);
     void write_pin(uint16_t pin, uint8_t value);
+    void write_pin_inverse(uint16_t pin, uint8_t value);
     void write_bank(uint8_t bank, uint8_t value);
     uint8_t read_pin(uint16_t pin);
     uint8_t read_bank(uint8_t bank);

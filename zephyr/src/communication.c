@@ -146,7 +146,7 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
         {
             pin = target * 2 + LED_CHANNELS_OFFSET;
             off_pin = pin + 1;
-            write_pin(off_pin, 1);
+            write_pin_inverse(off_pin, 1);
             if (new_pin_state == 1)
             {
                 set_red_led(target, "on");
@@ -168,18 +168,11 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
             {
                 new_pin_state = 1;
             }
-            write_pin(pin, new_pin_state);
-            if (new_pin_state == 1)
-            {
-                set_red_led(target, "off");
-            }
+            write_pin_inverse(pin, new_pin_state);
+            set_red_led(target, "off");
             // if (new_pin_state == 1)
             // {
             //     set_red_led(target, "off");
-            // }
-            // if (new_pin_state == 0)
-            // {
-            //     set_red_led(target, "on");
             // }
         }
         // write_pin(off_pin, 0);
@@ -205,7 +198,7 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
         {
             new_pin_state = 1;
         }
-        write_pin(pin, new_pin_state);
+        write_pin_inverse(pin, new_pin_state);
     }   
 }
 

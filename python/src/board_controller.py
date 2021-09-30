@@ -1,6 +1,7 @@
 import time
 import logging
 
+from threading import Lock
 from .serial_handler import SerialHandler
 
 class PowerCommandEnum():
@@ -37,13 +38,13 @@ class AdcGainEnum():
     V025 = 0x0A00
 
 class BoardController():
-    def __init__(self, serial_port, baudrate, timeout, lock):
+    def __init__(self, serial_port, baudrate, timeout):
         self.ser = None
         try:
             self.ser = SerialHandler(serial_port=serial_port, baudrate=baudrate, timeout=timeout)
         except Exception as e:
             print(e)
-        self.lock = lock
+        self.lock = Lock()
 
         for t in range(0, 4):
             self.set_power(t, PowerCommandEnum.OFF)
@@ -243,13 +244,13 @@ class BoardController():
 
             self.ser.write(f"detect {target}")
             time.sleep(0.05)
-            read_line = self.ser.read_until_starts_with("Detected board")
+            read_line = self.ser.read_until_starts_with("Detected board", timeout=0.1)
             board_detected = read_line.split(": ")[1]
-            ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+            ret = self.ser.read_until_starts_with_either("OK", "ERROR", timeout=0.1)
             self.lock.release()  # release lock
             if ret == "OK":
                 #logging.info(f"Successfully read device present from serial: {ret}. ")
-                return int(board_detected) * (-1) + 1
+                return board_detected
             if ret == "ERROR":
                 logging.error(f"Failed to read from serial for cmd: {ret}")
                 return False
