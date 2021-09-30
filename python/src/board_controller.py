@@ -300,6 +300,8 @@ class BoardController():
 
         #channel = target * 2 + color
         #print("Controlling led with: {}".format(f"led {channel} {state}"))
+        if color == LedColorEnum.RED:
+            self.ser.write(f"set_red_led {target} {state}")
         if color:
             self.ser.write(f"led {target} {state} {color}")
         else:

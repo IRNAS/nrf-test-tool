@@ -138,28 +138,38 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
     uint8_t pin;
     uint8_t off_pin;
     int res;
-    // LOG_DBG("color %d on target %d", color[target], target);
+    LOG_DBG("color %d on target %d\n", color[target], target);
 
     if (color[target] == 1 || color[target] == 2) 
     {
-        if (color[target] == 1)  // green
+        if (color[target] == 1)  // red
         {
             pin = target * 2 + 1 + LED_CHANNELS_OFFSET;
             off_pin = pin - 1;
+            if (new_pin_state == 1)
+            {
+                set_red_led(target, "on");
+            }
+            if (new_pin_state == 0)
+            {
+                set_red_led(target, "off");
+            }
         }
-        if (color[target] == 2)  // red
+        if (color[target] == 2)  // green
         {
             pin = target * 2 + LED_CHANNELS_OFFSET;
             off_pin = pin + 1;
+            write_pin(pin, new_pin_state);
         }
+        write_pin(off_pin, 0);
         res = read_pin(pin);
         // LOG_DBG("pin %d OLD state: %d", pin, res);
-        write_pin(pin, new_pin_state);
+
         res = read_pin(pin);
         // LOG_DBG("pin %d NEW state: %d", pin, res);
         res = read_pin(pin);
         // LOG_DBG("pin %d OLD state: %d", pin, res);
-        write_pin(off_pin, 0);
+
         res = read_pin(pin);
         // LOG_DBG("pin %d NEW state: %d", pin, res);
     }
@@ -169,13 +179,21 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
         res = read_pin(pin);
         // LOG_DBG("pin %d OLD state: %d", pin, res);
         write_pin(pin, new_pin_state);
-        res = read_pin(pin);
-        // LOG_DBG("pin %d NEW state: %d", pin, res);
-        pin++;
-        res = read_pin(pin);
-        // LOG_DBG("pin %d OLD state: %d", pin, res);
-        write_pin(pin, new_pin_state);
-        res = read_pin(pin);
+        if (new_pin_state == 1)
+        {
+            set_red_led(target, "on");
+        }
+        if (new_pin_state == 0)
+        {
+            set_red_led(target, "off");
+        }
+        // res = read_pin(pin);
+        // // LOG_DBG("pin %d NEW state: %d", pin, res);
+        // pin++;
+        // res = read_pin(pin);
+        // // LOG_DBG("pin %d OLD state: %d", pin, res);
+        // write_pin(pin, new_pin_state);
+        // res = read_pin(pin);
         // LOG_DBG("pin %d NEW state: %d", pin, res);
     }   
 }
@@ -367,7 +385,7 @@ uint8_t tca_set_led(uint8_t target, char *state, char *_color)
         blinking[target] = false;
         if (strcmp("on", state) == 0)  // turn on pin on current channel
         {
-        new_pin_state = 1;
+            new_pin_state = 1;
         }
         else    // turn off pin on current channel
         {

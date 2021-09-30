@@ -18,8 +18,8 @@ void tca_init(void)
     m_tca6424.setBankDirection(2,0);
     write_bank(2,0);
 
-    m_tca6424.setBankDirection(1, 170);  // write 255 to set direction 1 to whole bank
-    m_tca6424.setBankPolarity(1, 170);
+    m_tca6424.setBankDirection(1, 170);  // write 170 to set direction 1 to green pins bank
+    m_tca6424.setBankPolarity(1, 170);  // reverse polarity of green pins
     // m_tca6424.setBankDirection(1,0);
     write_bank(1,0);
 
