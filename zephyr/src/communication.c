@@ -162,16 +162,6 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
             write_pin(pin, new_pin_state);
         }
         write_pin(off_pin, 0);
-        res = read_pin(pin);
-        // LOG_DBG("pin %d OLD state: %d", pin, res);
-
-        res = read_pin(pin);
-        // LOG_DBG("pin %d NEW state: %d", pin, res);
-        res = read_pin(pin);
-        // LOG_DBG("pin %d OLD state: %d", pin, res);
-
-        res = read_pin(pin);
-        // LOG_DBG("pin %d NEW state: %d", pin, res);
     }
     else if (color[target] == 3)
     {
@@ -187,14 +177,6 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
         {
             set_red_led(target, "off");
         }
-        // res = read_pin(pin);
-        // // LOG_DBG("pin %d NEW state: %d", pin, res);
-        // pin++;
-        // res = read_pin(pin);
-        // // LOG_DBG("pin %d OLD state: %d", pin, res);
-        // write_pin(pin, new_pin_state);
-        // res = read_pin(pin);
-        // LOG_DBG("pin %d NEW state: %d", pin, res);
     }   
 }
 
