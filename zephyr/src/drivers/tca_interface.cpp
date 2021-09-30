@@ -18,10 +18,15 @@ void tca_init(void)
     m_tca6424.setBankDirection(2,0);
     write_bank(2,0);
 
-    m_tca6424.setBankDirection(1, 170);  // write 170 to set direction 1 to green pins bank
-    m_tca6424.setBankPolarity(1, 170);  // reverse polarity of green pins
+    m_tca6424.setBankDirection(1, 85);  // write 170 to set direction 1 to red pins bank - detect device
+    m_tca6424.setBankPolarity(1, 255);  // reverse polarity of all pins
+    write_bank(1,170);
     // m_tca6424.setBankDirection(1,0);
-    write_bank(1,0);
+    // write_bank(1,0);  // write 0 to set all low
+    // m_tca6424.writePin(9, 0);
+    // m_tca6424.writePin(11, 0);
+    // m_tca6424.writePin(13, 0);
+    // m_tca6424.writePin(15, 0);
 
     // something weird is going on - RED led toggles when writing command to toggle green - shouldnt be a problem, the logic seems to be reversed tho
 
@@ -70,6 +75,11 @@ uint8_t read_bank(uint8_t bank)
 uint8_t read_bank_direction(uint8_t bank) 
 {
     return m_tca6424.getBankDirection(bank);
+}
+
+uint8_t read_bank_outputs(uint8_t bank)
+{
+    return m_tca6424.getBankOutputLevel(bank);
 }
 
 #endif //__cplusplus

@@ -12,6 +12,7 @@ uint8_t tca_set_relay(uint8_t target, char *relay, char *state);
 uint8_t tca_set_led(uint8_t target, char *state, char *color);
 uint8_t tca_detect_device(uint8_t target);
 uint8_t tca_read_bank(uint8_t bank);
+uint8_t tca_read_bank_outputs(uint8_t bank);
 uint8_t tca_read_bank_direction(uint8_t bank);
 void init_tca_blink_work();
 

@@ -15,6 +15,7 @@ extern "C"
     uint8_t read_pin(uint16_t pin);
     uint8_t read_bank(uint8_t bank);
     uint8_t read_bank_direction(uint8_t bank);
+    uint8_t read_bank_outputs(uint8_t bank);
     
 #ifdef __cplusplus
 } // extern C

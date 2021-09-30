@@ -144,8 +144,9 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
     {
         if (color[target] == 1)  // red
         {
-            pin = target * 2 + 1 + LED_CHANNELS_OFFSET;
-            off_pin = pin - 1;
+            pin = target * 2 + LED_CHANNELS_OFFSET;
+            off_pin = pin + 1;
+            write_pin(off_pin, 1);
             if (new_pin_state == 1)
             {
                 set_red_led(target, "on");
@@ -157,18 +158,36 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
         }
         if (color[target] == 2)  // green
         {
-            pin = target * 2 + LED_CHANNELS_OFFSET;
-            off_pin = pin + 1;
+            pin = target * 2 + 1 + LED_CHANNELS_OFFSET;
+            off_pin = pin - 1;
+            if (new_pin_state == 1)
+            {
+                new_pin_state = 0;
+            }
+            else if (new_pin_state == 0)
+            {
+                new_pin_state = 1;
+            }
             write_pin(pin, new_pin_state);
+            if (new_pin_state == 1)
+            {
+                set_red_led(target, "off");
+            }
+            // if (new_pin_state == 1)
+            // {
+            //     set_red_led(target, "off");
+            // }
+            // if (new_pin_state == 0)
+            // {
+            //     set_red_led(target, "on");
+            // }
         }
-        write_pin(off_pin, 0);
+        // write_pin(off_pin, 0);
     }
     else if (color[target] == 3)
     {
-        pin = target * 2 + LED_CHANNELS_OFFSET;
+        pin = target * 2 + 1 + LED_CHANNELS_OFFSET;
         res = read_pin(pin);
-        // LOG_DBG("pin %d OLD state: %d", pin, res);
-        write_pin(pin, new_pin_state);
         if (new_pin_state == 1)
         {
             set_red_led(target, "on");
@@ -177,6 +196,16 @@ void toggle_led(uint8_t target, uint8_t new_pin_state)
         {
             set_red_led(target, "off");
         }
+        // LOG_DBG("pin %d OLD state: %d", pin, res);
+        if (new_pin_state == 1)
+        {
+            new_pin_state = 0;
+        }
+        else if (new_pin_state == 0)
+        {
+            new_pin_state = 1;
+        }
+        write_pin(pin, new_pin_state);
     }   
 }
 
@@ -299,9 +328,16 @@ void init_tca_blink_work()
 uint8_t tca_read_bank(uint8_t bank)
 {
     uint8_t bank_state = read_bank(bank);
-    LOG_DBG("read bank %d state: %d", bank, bank_state);
+    LOG_DBG("read bank %d state: %d\n", bank, bank_state);
 
     return bank_state;
+}
+
+uint8_t tca_read_bank_outputs(uint8_t bank)
+{
+    uint8_t bank_outputs = read_bank_outputs(bank);
+    LOG_DBG("read bank outputs %d state: %d\n", bank, bank_outputs);
+    return bank_outputs;
 }
 
 uint8_t tca_read_bank_direction(uint8_t bank)

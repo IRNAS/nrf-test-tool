@@ -249,7 +249,7 @@ class BoardController():
             self.lock.release()  # release lock
             if ret == "OK":
                 #logging.info(f"Successfully read device present from serial: {ret}. ")
-                return board_detected
+                return int(board_detected) * (-1) + 1
             if ret == "ERROR":
                 logging.error(f"Failed to read from serial for cmd: {ret}")
                 return False

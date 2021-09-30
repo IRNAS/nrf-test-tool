@@ -165,7 +165,15 @@ static int cmd_bank(const struct shell *shell, size_t argc, char **argv)
 	{
 		shell_print(shell, "Received command: read bank %d on.", bank);
 	}
+	shell_print(shell, "Bank direction: \n");
 	int err = tca_read_bank_direction(bank);	// TODO return OK or ERR
+
+	shell_print(shell, "Bank inputs: \n");
+	err = tca_read_bank(bank);
+
+	shell_print(shell, "Bank outputs: \n");
+	err = tca_read_bank_outputs(bank);
+
 	shell_print(shell, "OK");
 	return 0;
 }
