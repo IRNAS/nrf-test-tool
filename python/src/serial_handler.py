@@ -16,6 +16,14 @@ class SerialHandler:
         except Exception as e:
             raise e
 
+    def close_ser(self):
+        try:
+            if self.ser:
+                self.ser.close()
+                self.ser = None
+        except Exception as e:
+            raise e
+
     def read(self):
         #print(f"Receiving on {self.ser}")
         received = self.ser.readline()
@@ -80,7 +88,7 @@ class SerialHandler:
         while True:
             rx = self.read()
             # print(f"Read: {rx}")
-            if len(rx) >= len(a) and rx[0:len(a)] == a or len(rx) >= len(b) and rx[0:len(b)] == b:
+            if (len(rx) >= len(a) and rx[0:len(a)] == a) or (len(rx) >= len(b) and rx[0:len(b)] == b):
                 return rx
             # if rx == "":
             #     to += 1

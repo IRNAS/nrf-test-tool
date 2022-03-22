@@ -19,8 +19,8 @@ class JtagDeviceEnum():
     DISABLE = -1
 
 class LedColorEnum():
-    GREEN = "green"
-    RED = "red"
+    GREEN = "red"
+    RED = "green"
     ORANGE = "orange"
 
 class PinEnum():
@@ -65,10 +65,10 @@ class BoardController():
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         self.lock.release()
         if ret == "OK":
-            logging.info(f"Successfully toggled uart: {ret}")
+            logging.debug(f"Successfully toggled uart: {ret}")
             return True
         if ret == "ERROR":
-            logging.info(f"Failed to read from serial for cmd set_uart: {ret}")
+            logging.warning(f"Failed to read from serial for cmd set_uart: {ret}")
             return False
 
     def set_power(self, target, state):
@@ -87,7 +87,7 @@ class BoardController():
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         self.lock.release()  # release lock
         if ret == "OK":
-            logging.info(f"Successfully set power: {ret}")
+            logging.debug(f"Successfully set power: {ret}")
             return True
         if ret == "ERROR":
             logging.error(f"Failed to read from serial for cmd set_power: {ret}")
@@ -156,19 +156,20 @@ class BoardController():
 
         channel = target * 2
         self.ser.write(f"reset {channel}")
+        print(f"reset {channel}")
         try:
             ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         except Exception as e:
             self.lock.release()
             return False
         time.sleep(0.05)
-        channel += 1
-        self.ser.write(f"reset {channel}")
-        try:
-            ret = self.ser.read_until_starts_with_either("OK", "ERROR")
-        except Exception as e:
-            self.lock.release()
-            return False
+        # channel += 1
+        # self.ser.write(f"reset {channel}")
+        # try:
+        #     ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        # except Exception as e:
+        #     self.lock.release()
+        #     return False
         self.lock.release()  # release lock
         if ret == "OK":
             #logging.info(f"Successfully read from serial for cmd: {ret}")
@@ -250,6 +251,9 @@ class BoardController():
             self.lock.release()  # release lock
             if ret == "OK":
                 #logging.info(f"Successfully read device present from serial: {ret}. ")
+                # print(f"Board detected: {board_detected}")
+                
+                # return int(board_detected) % 1  # we get 1 if no board present, return 0 if 1
                 return board_detected
             if ret == "ERROR":
                 logging.error(f"Failed to read from serial for cmd: {ret}")
@@ -270,11 +274,12 @@ class BoardController():
             return False
 
         self.ser.write(f"led {channel} {state}")
+        # print(f"led {channel} {state}")
 
         ret = self.ser.read_until_starts_with_either("OK", "ERROR")
         self.lock.release()  # release lock
         if ret == "OK":
-            logging.info(f"Successfully read from serial for cmd: {ret}")
+            logging.debug(f"Successfully read from serial for cmd: {ret}")
             return True
         if ret == "ERROR":
             logging.error(f"Failed to read from serial for cmd: {ret}")
@@ -282,6 +287,8 @@ class BoardController():
 
     def control_led_on_target(self, target, state, color):
         """Control led on target 0-3, color=red/green, state = on/off"""
+        # print(f"led on {target} {color} {state}")
+
         self.lock.acquire()  # acquire lock
         if type(target) != int or target < 0 or target > 3:
             logging.warning(f"Invalid target: {target}. Valid targets: 0-3!")
