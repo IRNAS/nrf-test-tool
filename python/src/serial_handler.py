@@ -82,6 +82,23 @@ class SerialHandler:
             if time.time() - start_time > timeout:
                 raise Exception("Serial timed out")
 
+    def read_until_contains_either(self, s, timeout=10):
+        to = 0
+        start_time = time.time()
+        while True:
+            rx = self.read()
+            #print(rx)
+            # print(s)
+            for string in s:
+                if len(rx) >= len(string) and string in rx:
+                    return rx
+            if rx == "":
+                to += 1
+                if to > 10:
+                    raise Exception("Serial timed out")
+            if time.time() - start_time > timeout:
+                raise Exception("Serial timed out")
+
     def read_until_starts_with_either(self, a, b, timeout=10):
         to = 0
         start_time = time.time()
