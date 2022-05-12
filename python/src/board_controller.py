@@ -224,9 +224,21 @@ class BoardController():
         channel = target * 4 + pin
 
         self.ser.write(f"adc {channel}")
-        read_line = self.ser.read_until_starts_with("Read analog value")
+        try:
+            read_line = self.ser.read_until_starts_with("Read analog value")
+        except Exception as e:
+            print(f"Error occured when trying to read analog value: {e}")
+            self.lock.release()  # release lock
+            return False
+
         voltage = read_line.split(": ")[1]
-        ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        try:
+            ret = self.ser.read_until_starts_with_either("OK", "ERROR")
+        except Exception as e:
+            print(f"Error occured when waiting for OK or ERROR: {e}")
+            self.lock.release()  # release lock
+            return False
+            
         self.lock.release()  # release lock
         if ret == "OK":
             # logging.info(f"Successfully read adc value from serial: {ret}")
